@@ -119,15 +119,26 @@
       </div>
 
       <div class="sec">
-        <div class="section-title">🏡 家动态 <span class="more">共同生活的每件小事都值得被记录</span></div>
+        <div class="section-title">🏡 家动态 <span class="more">点赞评论，把日子过成社区</span></div>
         <div class="card card-pad feed-card">
-          ${st.feed(6).map((ev) => `
+          ${st.feed(6).map((ev) => {
+            const key = `${ev.date}|${ev.type}|${ev.text}`;
+            const meta = st.state().feedMeta[key] || { likes: [], comments: [] };
+            const liked = meta.likes.includes(me.id);
+            return `
             <div class="feed-row">
               <span class="feed-ic" style="background:${feedColor(ev.type)}">${ev.icon}</span>
-              <div class="feed-tx">${UI.esc(ev.text)}</div>
+              <div class="feed-main">
+                <div class="feed-tx">${UI.esc(ev.text)}</div>
+                <div class="feed-actions">
+                  <button class="fa-btn ${liked ? 'on' : ''}" data-feed-like="${key}">👍 ${meta.likes.length || ''}</button>
+                  <button class="fa-btn" data-feed-comment="${key}">💬 ${meta.comments.length || ''}</button>
+                </div>
+              </div>
               <div class="feed-date">${ev.date.slice(5)}</div>
-            </div>`).join('')}
-          <div class="f-hint" style="margin-top:8px">💡 家动态是「合租社区」的内容沉淀：账清、事明，日子都看得见。</div>
+            </div>`;
+          }).join('')}
+          <div class="f-hint" style="margin-top:8px">💡 家动态是「合租社区」的内容沉淀；开启云端共享之家后，点赞与评论会实时同步给所有室友。</div>
         </div>
       </div>
 
@@ -175,6 +186,54 @@
       UI.toast(t.done ? '已标记结清' : '已恢复待结清');
       Router.render();
     }));
+    el.querySelectorAll('[data-feed-like]').forEach((b) => b.addEventListener('click', () => {
+      const key = b.dataset.feedLike;
+      const meta = st.state().feedMeta[key] || { likes: [], comments: [] };
+      const i = meta.likes.indexOf(me.id);
+      if (i >= 0) meta.likes.splice(i, 1); else meta.likes.push(me.id);
+      st.state().feedMeta[key] = meta;
+      st.save();
+      UI.toast(i >= 0 ? '已取消点赞' : '👍 点赞成功');
+      render(el);
+    }));
+    el.querySelectorAll('[data-feed-comment]').forEach((b) => b.addEventListener('click', () => openCommentSheet(b.dataset.feedComment)));
+  }
+
+  /* ---------- 评论 ---------- */
+  function openCommentSheet(key) {
+    const st = S();
+    const meta = st.state().feedMeta[key] || { likes: [], comments: [] };
+    const members = st.activeMembers();
+    const modal = UI.openModal('💬 评论',
+      `<div id="cm-list" style="max-height:220px;overflow-y:auto;margin-bottom:10px">
+        ${meta.comments.map((c) => `
+          <div class="cm-row">${UI.avatar(st.member(c.by), 'sm')}<div class="cm-bubble"><b>${st.memberName(c.by)}</b> ${UI.esc(c.text)}</div></div>`).join('')
+        || '<div class="empty" style="padding:10px">还没有评论，来抢沙发～</div>'}
+      </div>
+      <div class="chip-row" style="padding-bottom:2px">${members.map((m) => `<button class="chip" data-at="${UI.esc(m.name)}">@${UI.esc(m.name)}</button>`).join('')}</div>
+      <div style="display:flex;gap:6px;margin-top:8px">
+        <input class="f-input" id="cm-input" placeholder="说点什么…" style="flex:1">
+        <button class="btn btn-primary" id="cm-send">发送</button>
+      </div>`, '');
+    const input = modal.root.querySelector('#cm-input');
+    modal.root.querySelectorAll('[data-at]').forEach((b) => b.addEventListener('click', () => {
+      input.value = input.value.trim() ? input.value.trim() + ' ' : '';
+      input.value += '@' + b.dataset.at + ' ';
+      input.focus();
+    }));
+    const send = () => {
+      const text = input.value.trim();
+      if (!text) { UI.toast('说点什么再发送吧', '⚠️'); return; }
+      const m = st.state().feedMeta[key] || { likes: [], comments: [] };
+      m.comments.push({ by: st.currentUser().id, text: text.slice(0, 200), ts: Date.now() });
+      st.state().feedMeta[key] = m;
+      st.save();
+      UI.toast('评论已发布 💬');
+      modal.close();
+      Router.render();
+    };
+    modal.root.querySelector('#cm-send').addEventListener('click', send);
+    input.addEventListener('keydown', (e) => { if (e.key === 'Enter') send(); });
   }
 
   function feedColor(type) {
