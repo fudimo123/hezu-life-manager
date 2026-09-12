@@ -103,8 +103,6 @@
       <div id="ai-panel"></div>`;
 
     const modal = UI.openModal('', body, '');
-    const sheet = modal.root.closest('.modal-sheet');
-    sheet.querySelector('.modal-title').innerHTML = '<span></span><button class="modal-close" data-close>✕</button>';
     modal.root.querySelector('#ai-settings-btn').addEventListener('click', () => openSettings());
     modal.root.querySelectorAll('.ai-tab').forEach((b) => b.addEventListener('click', () => {
       tab = b.dataset.t;
