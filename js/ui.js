@@ -112,8 +112,23 @@
   function val(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
   function num(id) { const v = parseFloat(val(id)); return isNaN(v) ? 0 : v; }
 
+  /* ---------- 复制文本（含降级） ---------- */
+  function fallbackCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); toast('已复制，去粘贴给室友吧 📋'); }
+    catch (e) { toast('复制失败，请手动复制', '⚠️'); }
+    ta.remove();
+  }
+  function copyText(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => toast('已复制，去粘贴给室友吧 📋'), () => fallbackCopy(text));
+    } else fallbackCopy(text);
+  }
+
   window.UI = {
-    esc, avatar, avatarStack, toast,
+    esc, avatar, avatarStack, toast, copyText,
     openModal, fGroup, fInput, fTextarea, fSelect, fSeg, bindSeg,
     fEmojiPick, bindEmojiPick, fMemberPick, bindMemberPick, val, num,
   };
