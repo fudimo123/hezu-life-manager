@@ -32,28 +32,37 @@
     other: { mode: 'equal', reason: '默认 AA 均摊，特殊情况再用自定义比例。' },
   };
 
-  /* ---------- 引擎状态 ---------- */
-  const hasKey = () => { const a = Store.state().ai || {}; return !!(a.key && a.key.trim()); };
-  function engineCfg() {
+  /* ---------- 引擎状态 ----------
+     优先级：用户自填 Key > 官方代理（部署后填入 DEFAULT_PROXY）> 内置模板 */
+  const DEFAULT_PROXY = ''; // TODO: 部署 Deno 代理后填入，如 'https://hezu-ai-xxxx.deno.dev/chat'
+  function engine() {
     const a = Store.state().ai || {};
-    const p = PROVIDERS[a.provider] || PROVIDERS.custom;
-    return { provider: a.provider || 'deepseek', base: a.baseUrl || p.base, model: a.model || p.model, key: (a.key || '').trim() };
+    if (a.key && a.key.trim()) {
+      const p = PROVIDERS[a.provider] || PROVIDERS.custom;
+      return { source: 'user', base: a.baseUrl || p.base, model: a.model || p.model, key: a.key.trim() };
+    }
+    if (DEFAULT_PROXY) return { source: 'proxy', base: DEFAULT_PROXY, model: 'deepseek-chat', key: 'proxy-internal' };
+    return null;
   }
-  const engineLabel = () => hasKey() ? `🟢 真实大模型 · ${engineCfg().model || '已配置'}` : '📦 内置模板引擎（未配置 Key）';
+  const engineLabel = () => {
+    const e = engine();
+    if (!e) return '📦 内置模板引擎（未配置 Key）';
+    return e.source === 'proxy' ? '🟢 真实大模型 · 官方代理' : `🟢 真实大模型 · ${e.model || '已配置'}`;
+  };
 
   /* ---------- 大模型调用（20 秒超时保护） ---------- */
   async function chat(system, user) {
-    const c = engineCfg();
-    if (!hasKey() || !c.base || !c.model) return { error: '未配置 API Key' };
+    const e = engine();
+    if (!e || !e.base || !e.model) return { error: '未配置 API Key' };
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 20000);
     try {
-      const r = await fetch(c.base, {
+      const r = await fetch(e.base, {
         method: 'POST',
         signal: ctrl.signal,
-        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + c.key },
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + e.key },
         body: JSON.stringify({
-          model: c.model,
+          model: e.model,
           messages: [{ role: 'system', content: system }, { role: 'user', content: user }],
           temperature: 0.7,
         }),
@@ -171,7 +180,7 @@
       </div>`).join('');
 
     // 已配置 Key → 后台请求大模型升级话术
-    if (hasKey()) {
+    if (engine()) {
       targets.forEach(async (t) => {
         const holder = panel.querySelector(`[data-script-for="${t.id}"]`);
         if (!holder) return;
@@ -232,7 +241,7 @@
       const result = panel.querySelector('#ai-draft-result');
       if (!topic) { UI.toast('请先描述公约主题', '⚠️'); return; }
       result.innerHTML = `<div class="ai-answer"><div class="ai-answer-text">🤖 正在起草…</div></div>`;
-      if (hasKey()) {
+      if (engine()) {
         const res = await chat(
           '你是「合租生活管家」的 AI 管家，擅长起草合租公约。公约要求：具体、可执行、语气友好、不指责。',
           `请为合租家庭起草一条公约，主题描述：「${topic}」。要求：标题 15 字以内；正文 60-100 字，包含明确的执行标准。只返回 JSON：{"title":"...","content":"..."}`
@@ -263,7 +272,7 @@
   function renderSplit(st, panel) {
     panel.innerHTML = `
       <div class="ai-block">
-        <div class="ai-q">选一种账单类型，我给出最公平的分摊方式建议${hasKey() ? '；点「AI 分析」可获得结合我们家情况的深入建议' : ''} 👇</div>
+        <div class="ai-q">选一种账单类型，我给出最公平的分摊方式建议${engine() ? '；点「AI 分析」可获得结合我们家情况的深入建议' : ''} 👇</div>
         ${Object.keys(st.BILL_TYPES).map((k) => {
           const t = st.BILL_TYPES[k];
           const sug = SPLIT_SUG[k] || SPLIT_SUG.other;
@@ -273,7 +282,7 @@
             <div class="ai-draft-body" id="reason-${k}">${UI.esc(sug.reason)}</div>
             <div style="display:flex;gap:6px;margin-top:8px">
               <button class="btn btn-green btn-sm" data-bill="${k}" data-mode="${sug.mode}">按此方式记账</button>
-              ${hasKey() ? `<button class="btn btn-soft btn-sm" data-ai-split="${k}">🤖 AI 分析</button>` : ''}
+              ${engine() ? `<button class="btn btn-soft btn-sm" data-ai-split="${k}">🤖 AI 分析</button>` : ''}
             </div>
           </div>`;
         }).join('')}
