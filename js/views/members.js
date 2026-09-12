@@ -4,6 +4,13 @@
   const S = () => Store;
   const EMOJIS = ['🦌', '🐯', '🐱', '🐻', '🐰', '🦊', '🐶', '🐼', '🐨', '🦁', '🐷', '🐸'];
   const COLORS = ['#FF8A65', '#4DB6AC', '#9575CD', '#64B5F6', '#F06292', '#FFB74D', '#81C784', '#A1887F'];
+  const TAG_OPTS = {
+    sleep: ['早睡早起', '晚睡', '熬夜党', '随缘'],
+    clean: ['爱整洁', '随性', '轻度洁癖'],
+    pet: ['无', '有猫', '有狗', '其他宠物'],
+    smoke: ['不烟不酒', '偶尔小酌', '抽烟'],
+    social: ['偏i人', '偏e人', '介于两者'],
+  };
 
   function open() {
     const st = S();
@@ -12,19 +19,27 @@
     const modal = UI.openModal(
       '👥 室友管理',
       `
-      <div style="margin-bottom:14px">${members.map((m) => `
+      <div class="f-hint" style="margin:-6px 0 12px">🤝 生活标签 + 合拍指数：借鉴 Wellcee 找室友标签体系，新室友入住前可先看画像评估是否同频。</div>
+      <div style="margin-bottom:14px">${members.map((m) => {
+        const cp = m.id !== me.id ? st.compatScore(me.id, m.id) : null;
+        return `
         <div class="mem-card" style="${m.id === me.id ? 'border:1.5px solid var(--brand)' : ''}">
           ${UI.avatar(m, 'md')}
           <div class="mem-info">
             <div class="mem-name">${UI.esc(m.name)} ${m.id === me.id ? '<span class="badge badge-amber" style="margin-left:4px">当前身份</span>' : ''}${m.left ? '<span class="badge badge-gray" style="margin-left:4px">已退租</span>' : ''}</div>
-            <div class="mem-sub">${m.left ? m.joined + ' ~ ' + m.left : '入住 ' + st.inHomeDays(m) + ' 天'} · ${m.points} 积分 · ${m.joined} 入住</div>
+            <div class="mem-sub">${m.left ? m.joined + ' ~ ' + m.left : '入住 ' + st.inHomeDays(m) + ' 天'} · ${m.points} 积分</div>
+            <div class="mem-tags">
+              ${Object.values(m.tags || {}).filter((t) => t && t !== '—').slice(0, 3).map((t) => `<span class="tag-chip">${UI.esc(t)}</span>`).join('')}
+              ${cp !== null ? `<span class="tag-chip compat ${cp >= 60 ? 'hi' : cp >= 40 ? 'mid' : ''}">🤝 与我合拍 ${cp}%</span>` : ''}
+            </div>
           </div>
           <div style="display:flex;flex-direction:column;gap:4px">
             ${m.id !== me.id && !m.left ? `<button class="btn btn-soft btn-sm" data-switch="${m.id}">设为当前</button>` : ''}
             <button class="btn btn-outline btn-sm" data-edit="${m.id}">编辑</button>
             ${!m.left ? `<button class="btn btn-sm" style="background:var(--red-soft);color:var(--red)" data-leave="${m.id}">退租</button>` : ''}
           </div>
-        </div>`).join('')}
+        </div>`;
+      }).join('')}
       </div>
       <button class="btn btn-outline btn-block" id="m-add">＋ 添加室友</button>
 
@@ -128,11 +143,14 @@
     const m = st.member(id);
     if (!m) return;
     let emoji = m.emoji, color = m.color;
+    const tags = m.tags || { sleep: '随缘', clean: '随性', pet: '无', smoke: '不烟不酒', social: '介于两者' };
     const body = `
       ${UI.fGroup('昵称', UI.fInput('e-name', m.name))}
       ${UI.fGroup('头像', UI.fEmojiPick('e-emoji', EMOJIS, emoji))}
       ${UI.fGroup('颜色', `<div class="emoji-pick" id="e-color">${COLORS.map((c) => `<button type="button" data-c="${c}" style="background:${c}${c === color ? ';outline:2px solid var(--ink)' : ''}"></button>`).join('')}</div>`)}
       ${UI.fGroup('入住日期', UI.fInput('e-joined', m.joined, '', 'date'))}
+      <div style="font-size:13px;font-weight:800;margin:16px 0 10px">🏷️ 生活习惯标签 <span style="color:var(--ink3);font-weight:500;font-size:11.5px">（用于室友画像与合拍指数）</span></div>
+      ${Object.keys(st.TAG_DIMS).map((k) => UI.fGroup(st.TAG_DIMS[k], UI.fSelect('t-' + k, TAG_OPTS[k].map((v) => ({ value: v, label: v })), tags[k] || TAG_OPTS[k][0]))).join('')}
     `;
     const modal = UI.openModal(`✏️ 编辑 · ${UI.esc(m.name)}`, body,
       `<button class="btn btn-soft" data-close>取消</button><button class="btn btn-primary" id="e-save">保存</button>`);
@@ -149,7 +167,9 @@
       const name = UI.val('e-name');
       if (!name) { UI.toast('请输入昵称', '⚠️'); return false; }
       m.name = name; m.emoji = emoji; m.color = color; m.joined = UI.val('e-joined') || m.joined;
-      st.save(); UI.toast('已保存');
+      m.tags = {};
+      Object.keys(st.TAG_DIMS).forEach((k) => { m.tags[k] = UI.val('t-' + k) || tags[k]; });
+      st.save(); UI.toast('已保存，合拍指数已更新');
       Router.render(); Router.renderHeader();
     });
   }
