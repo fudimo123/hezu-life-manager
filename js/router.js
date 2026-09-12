@@ -31,12 +31,31 @@
     if (dot) dot.classList.toggle('hidden', n === 0);
   }
 
+  function updateCloudBadge() {
+    const badge = document.getElementById('cloud-badge');
+    const sc = document.getElementById('sidebar-cloud');
+    if (!badge && !sc) return;
+    const joined = window.Cloud ? Cloud.isJoined() : false;
+    const c = Store.state().cloud || {};
+    const online = (window.Cloud && Cloud.status && Cloud.status.online) || [];
+    if (badge) {
+      badge.textContent = joined ? '🟢 云端共享中' : '⚪ 本地模式';
+      badge.classList.toggle('on', joined);
+    }
+    if (sc) {
+      sc.innerHTML = joined
+        ? `<b>🟢 共享之家已开启</b><br>邀请码 <b style="letter-spacing:2px">${UI.esc(c.code)}</b> · v${c.version}<br>${online.length ? online.length + ' 台设备在线' : '暂无其他设备在线'}<br><span style="font-size:11px;color:var(--ink3)">成员管理 → 共享之家 查看详情</span>`
+        : `<b>☁️ 共享之家</b><br>开启后，账本 · 值日 · 库存 · 公约跨设备实时共享<br><span style="font-size:11px;color:var(--ink3)">成员管理 → 共享之家 一键开启</span>`;
+    }
+  }
+
   function renderHeader() {
     const st = Store;
     document.getElementById('app-home-name').textContent = '🏠 ' + st.state().home.name;
     document.getElementById('app-home-sub').textContent = st.state().home.address + ' · ' + st.activeMembers().length + ' 位室友';
     document.getElementById('avatar-stack').innerHTML = UI.avatarStack(st.activeMembers());
     updateBell();
+    updateCloudBadge();
   }
 
   function render() {
@@ -110,6 +129,28 @@
     if (e.key === 'n' || e.key === 'N') { FAB_CONF[currentTab].fn(); return; }
   }
 
+  /* ---------- 视图模式（自适应 / 移动预览 / 桌面布局） ---------- */
+  const VMODE_KEY = 'hezu-viewmode';
+  const VMODES = ['auto', 'mobile', 'desktop'];
+  const modeLabel = (m) => (m === 'auto' ? '🅰️ 自适应' : m === 'mobile' ? '📱 移动预览' : '🖥️ 桌面布局');
+  function applyViewMode() {
+    const m = localStorage.getItem(VMODE_KEY) || 'auto';
+    const wide = window.matchMedia('(min-width: 1024px)').matches;
+    const desktopOn = m === 'desktop' || (m === 'auto' && wide);
+    document.body.classList.toggle('desktop-view', desktopOn);
+    document.body.classList.toggle('force-mobile', m === 'mobile' && wide);
+    const btn = document.getElementById('btn-viewmode');
+    if (btn) { btn.textContent = modeLabel(m); btn.title = '视图模式：' + modeLabel(m) + '，点击切换'; }
+  }
+  function cycleViewMode() {
+    const cur = localStorage.getItem(VMODE_KEY) || 'auto';
+    const next = VMODES[(VMODES.indexOf(cur) + 1) % VMODES.length];
+    localStorage.setItem(VMODE_KEY, next);
+    applyViewMode();
+    UI.toast('视图模式：' + modeLabel(next) + (next === 'mobile' ? '（面试官可在电脑上看移动端形态）' : ''));
+  }
+  window.matchMedia('(min-width: 1024px)').addEventListener('change', applyViewMode);
+
   window.addEventListener('hashchange', route);
   window.addEventListener('keydown', onKey);
   window.addEventListener('DOMContentLoaded', () => {
@@ -117,6 +158,14 @@
     document.getElementById('btn-members').addEventListener('click', () => Views.membersDrawer());
     document.getElementById('btn-reminders').addEventListener('click', () => Views.reminders());
     document.getElementById('btn-help').addEventListener('click', () => Views.guide());
+    document.getElementById('btn-viewmode').addEventListener('click', cycleViewMode);
+    document.getElementById('btn-quickadd').addEventListener('click', () => FAB_CONF[currentTab].fn());
+    document.getElementById('nav-ai').addEventListener('click', () => Views.ai());
+    document.getElementById('nav-plaza').addEventListener('click', () => Views.plaza());
+    document.getElementById('nav-recruit').addEventListener('click', () => Views.recruit());
+    document.getElementById('nav-members2').addEventListener('click', () => Views.membersDrawer());
+    document.getElementById('nav-landing').addEventListener('click', () => { location.hash = '#/'; });
+    applyViewMode();
     route();
   });
 
