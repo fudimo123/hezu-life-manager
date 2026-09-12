@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>合租生活管家 · 同一屋檐下，账清事明人亲</title>
+<meta name="description" content="面向合租青年的生活协作工具：费用AA分摊、清洁值日排班、公共物品登记与提醒、室友公约管理。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
+<link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+
+<!-- ================= 产品介绍页（Landing） ================= -->
+<div id="view-landing">
+  <header class="lp-nav">
+    <div class="lp-nav-inner">
+      <div class="lp-logo"><span class="lp-logo-icon">🏠</span> 合租生活管家</div>
+      <nav class="lp-links">
+        <a href="#pain">痛点洞察</a>
+        <a href="#features">功能设计</a>
+        <a href="#flows">核心流程</a>
+        <a href="#/app" class="lp-btn lp-btn-small">进入 Demo</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="lp-hero">
+    <div class="lp-hero-inner">
+      <div class="lp-hero-text">
+        <div class="lp-badge">🛋️ 为合租青年而生的生活协作工具</div>
+        <h1>同一屋檐下，<br><span class="grad">账清 · 事明 · 人亲</span></h1>
+        <p class="lp-sub">费用 AA 分摊、清洁值日排班、公共物品管理、室友公约签署。<br>把「口头约定」变成「自动提醒」，把「不好意思开口」变成「系统帮你说」。</p>
+        <div class="lp-cta-row">
+          <a href="#/app" class="lp-btn lp-btn-primary">🚀 立即体验 Demo</a>
+          <a href="#features" class="lp-btn lp-btn-ghost">查看产品设计 ↓</a>
+        </div>
+        <div class="lp-notes">· 演示数据已内置，可随意增删改 · 数据保存在浏览器本地 · 无需注册</div>
+      </div>
+      <div class="lp-phone">
+        <div class="lp-phone-frame">
+          <div class="lp-phone-notch"></div>
+          <div class="lp-phone-screen">
+            <div class="mock-status">9:41</div>
+            <div class="mock-greet">👋 晚上好，小鹿</div>
+            <div class="mock-card mock-balance">
+              <div class="mock-label">本月支出</div>
+              <div class="mock-amount">¥ 7,683<span>.40</span></div>
+              <div class="mock-row"><span>人均分摊</span><b>¥ 1,920.85</b></div>
+              <div class="mock-row"><span>我的待收</span><b class="up">+ ¥ 126.50</b></div>
+              <div class="mock-bar"><i style="width:72%"></i></div>
+            </div>
+            <div class="mock-card mock-duty">
+              <div class="mock-title">🧹 今日值日</div>
+              <div class="mock-duty-row">
+                <span>厨房清洁 · 值日人：Momo</span>
+                <button class="mock-done">打卡 ✓</button>
+              </div>
+              <div class="mock-duty-row">
+                <span>倒垃圾 · 值日人：小鹿</span>
+                <button class="mock-done">打卡 ✓</button>
+              </div>
+            </div>
+            <div class="mock-card mock-stock">
+              <div class="mock-title">📦 库存预警</div>
+              <div class="mock-stock-row"><span class="dot warn"></span> 垃圾袋 <b>已用完</b><button class="mock-buy">去补货</button></div>
+            </div>
+            <div class="mock-nav">
+              <span class="on">🏠<i>总览</i></span><span>💰<i>账单</i></span><span>🧹<i>值日</i></span><span>📦<i>物品</i></span><span>📜<i>公约</i></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="lp-stats">
+      <div><b>4</b><span>大功能模块</span></div>
+      <div><b>3</b><span>种分摊算法</span></div>
+      <div><b>24h</b><span>智能提醒</span></div>
+      <div><b>100%</b><span>数据本地存储</span></div>
+    </div>
+  </section>
+
+  <section class="lp-section" id="pain">
+    <div class="lp-section-head">
+      <h2>合租生活，矛盾从哪来？</h2>
+      <p>来自真实合租社区的痛点调研：90% 的室友矛盾，都源于「账没算清」和「约定没人执行」。</p>
+    </div>
+    <div class="lp-pain-grid">
+      <div class="lp-pain-card">
+        <div class="lp-pain-icon" style="background:#e6f7f2">💸</div>
+        <h3>钱算不清</h3>
+        <p class="lp-quote">「水电燃气按月均摊还是按天算？新人只住了 20 天，凭什么摊一整个月？」</p>
+        <p>垫付忘记记录、结算时各说各话、催款尴尬。欠款不催伤钱，催了伤感情。</p>
+        <span class="lp-solve">→ 三种分摊算法 + 自动结算中心</span>
+      </div>
+      <div class="lp-pain-card">
+        <div class="lp-pain-icon" style="background:#fff0e8">🧹</div>
+        <h3>活没人干</h3>
+        <p class="lp-quote">「值日表贴在冰箱上，贴了一个月，动的永远是同一个人。」</p>
+        <p>排班不公平、轮值靠自觉、做完没人知道。公共区域卫生成为合租第一大矛盾源。</p>
+        <span class="lp-solve">→ 自动轮值排班 + 打卡提醒 + 积分榜</span>
+      </div>
+      <div class="lp-pain-card">
+        <div class="lp-pain-icon" style="background:#e9f1ff">📦</div>
+        <h3>东西没人买</h3>
+        <p class="lp-quote">「垃圾袋用完了才发现，纸抽永远只剩最后一张，最后都是同一个人默默下单。」</p>
+        <p>公共物品消耗无记录、补货无提醒，谁买谁吃亏，慢慢变成隐形怨气。</p>
+        <span class="lp-solve">→ 物品登记 + 低库存预警 + 一键补货</span>
+      </div>
+      <div class="lp-pain-card">
+        <div class="lp-pain-icon" style="background:#f2efff">📜</div>
+        <h3>约定没约束</h3>
+        <p class="lp-quote">「说好 11 点后安静，转头就忘；当面不好意思说，憋着又难受。」</p>
+        <p>公约口头化、朝令夕改、违约无记录，说理时拿不出任何「证据」。</p>
+        <span class="lp-solve">→ 公约电子化 + 在线投票 + 违约留痕</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="lp-section" id="features">
+    <div class="lp-section-head">
+      <h2>产品功能架构</h2>
+      <p>四个模块围绕「记录 — 计算 — 提醒 — 执行」闭环设计，数据彼此打通：成员入住/退租日期自动驱动费用按天分摊与值日轮值。</p>
+    </div>
+    <div class="lp-arch">
+      <div class="lp-arch-root">🏠 合租生活管家</div>
+      <div class="lp-arch-grid">
+        <div class="lp-module" style="--mc:#0EA47A">
+          <div class="lp-module-head"><span class="lp-module-icon">💰</span><div><h3>费用 AA 分摊</h3><em>Expense Split</em></div></div>
+          <div class="lp-chips"><span>记一笔</span><span>AA 均摊</span><span>按入住天数</span><span>自定义比例</span><span>自动结算中心</span><span>月度统计</span><span>还款确认</span></div>
+        </div>
+        <div class="lp-module" style="--mc:#FF6A3D">
+          <div class="lp-module-head"><span class="lp-module-icon">🧹</span><div><h3>清洁值日排班</h3><em>Chore Roster</em></div></div>
+          <div class="lp-chips"><span>自动轮值</span><span>今日值日</span><span>一键打卡</span><span>本周排班</span><span>积分榜</span><span>完成记录</span></div>
+        </div>
+        <div class="lp-module" style="--mc:#3B82F6">
+          <div class="lp-module-head"><span class="lp-module-icon">📦</span><div><h3>公共物品管理</h3><em>Shared Inventory</em></div></div>
+          <div class="lp-chips"><span>物品登记</span><span>库存状态</span><span>消耗记录</span><span>低库存预警</span><span>一键补货</span><span>位置/归属</span></div>
+        </div>
+        <div class="lp-module" style="--mc:#7C5CF0">
+          <div class="lp-module-head"><span class="lp-module-icon">📜</span><div><h3>室友公约管理</h3><em>House Covenant</em></div></div>
+          <div class="lp-chips"><span>发起公约</span><span>在线投票</span><span>签署确认</span><span>违约记录</span><span>分类检索</span><span>生效状态</span></div>
+        </div>
+      </div>
+      <div class="lp-foundation">
+        <div class="lp-foundation-item">🔗 数据打通：成员入住日期 → 费用按天分摊 / 值日轮值表自动更新</div>
+        <div class="lp-foundation-item">⏰ 提醒中心：值日提醒 · 库存预警 · 待结算提醒 · 公约投票提醒</div>
+        <div class="lp-foundation-item">🔒 隐私安全：数据仅存本地浏览器，支持导出 / 导入备份</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lp-section" id="flows">
+    <div class="lp-section-head">
+      <h2>核心流程设计</h2>
+      <p>每个模块都设计为「最短路径闭环」，让用户 30 秒内完成一次完整操作。</p>
+    </div>
+    <div class="lp-flow-grid">
+      <div class="lp-flow">
+        <div class="lp-flow-head"><span>💰</span><h3>费用结算闭环</h3></div>
+        <div class="lp-flow-steps">
+          <div class="lp-step"><b>1</b><span>垫付人记一笔</span></div><i>→</i>
+          <div class="lp-step"><b>2</b><span>选分摊方式</span></div><i>→</i>
+          <div class="lp-step"><b>3</b><span>系统自动算账</span></div><i>→</i>
+          <div class="lp-step"><b>4</b><span>结算中心催还款</span></div><i>→</i>
+          <div class="lp-step"><b>5</b><span>还款确认结清</span></div>
+        </div>
+      </div>
+      <div class="lp-flow">
+        <div class="lp-flow-head"><span>🧹</span><h3>值日执行闭环</h3></div>
+        <div class="lp-flow-steps">
+          <div class="lp-step"><b>1</b><span>设定任务与频率</span></div><i>→</i>
+          <div class="lp-step"><b>2</b><span>系统自动排班</span></div><i>→</i>
+          <div class="lp-step"><b>3</b><span>到点提醒值日人</span></div><i>→</i>
+          <div class="lp-step"><b>4</b><span>完成打卡</span></div><i>→</i>
+          <div class="lp-step"><b>5</b><span>积分入榜</span></div>
+        </div>
+      </div>
+      <div class="lp-flow">
+        <div class="lp-flow-head"><span>📦</span><h3>物品补货闭环</h3></div>
+        <div class="lp-flow-steps">
+          <div class="lp-step"><b>1</b><span>登记公共物品</span></div><i>→</i>
+          <div class="lp-step"><b>2</b><span>日常消耗记录</span></div><i>→</i>
+          <div class="lp-step"><b>3</b><span>低于阈值预警</span></div><i>→</i>
+          <div class="lp-step"><b>4</b><span>一键补货</span></div><i>→</i>
+          <div class="lp-step"><b>5</b><span>补货费用入账单</span></div>
+        </div>
+      </div>
+      <div class="lp-flow">
+        <div class="lp-flow-head"><span>📜</span><h3>公约生成闭环</h3></div>
+        <div class="lp-flow-steps">
+          <div class="lp-step"><b>1</b><span>发起公约草案</span></div><i>→</i>
+          <div class="lp-step"><b>2</b><span>室友在线投票</span></div><i>→</i>
+          <div class="lp-step"><b>3</b><span>达到比例生效</span></div><i>→</i>
+          <div class="lp-step"><b>4</b><span>全员签署确认</span></div><i>→</i>
+          <div class="lp-step"><b>5</b><span>违约记录留痕</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="lp-section lp-highlight">
+    <div class="lp-section-head">
+      <h2>设计亮点</h2>
+      <p>区别于记账工具与群接龙，我们做的是「合租关系的操作系统」。</p>
+    </div>
+    <div class="lp-highlight-grid">
+      <div class="lp-highlight-item"><b>🧮</b><h3>公平的分摊算法</h3><p>均摊 / 按入住天数 / 自定义比例三种方式；新室友、退租自动按天折算，谁都不吃亏。</p></div>
+      <div class="lp-highlight-item"><b>🤝</b><h3>不尴尬的催收</h3><p>结算中心自动计算「谁该转给谁多少钱」，一键复制转账话术，系统替你说出口。</p></div>
+      <div class="lp-highlight-item"><b>🔁</b><h3>全自动轮值</h3><p>任务只需设定一次，系统按成员顺序自动排班到天；完成打卡得积分，公平看得见。</p></div>
+      <div class="lp-highlight-item"><b>🚨</b><h3>库存预警</h3><p>消耗记录驱动库存变化，低于阈值自动进入首页提醒，补货费用可直接计入账单 AA。</p></div>
+      <div class="lp-highlight-item"><b>📝</b><h3>公约即契约</h3><p>投票生效、全员签署、违约留痕，让「口头约定」升级为可追溯的书面契约。</p></div>
+      <div class="lp-highlight-item"><b>🔒</b><h3>隐私与归属</h3><p>数据 100% 本地存储，不注册不上传；支持一键导出备份，随时迁移。</p></div>
+    </div>
+  </section>
+
+  <section class="lp-cta">
+    <h2>准备好让合租生活更省心了吗？</h2>
+    <p>打开 Demo，内置 4 位室友、1 个月账单、值日排班与公约数据，随点随玩。</p>
+    <a href="#/app" class="lp-btn lp-btn-primary lp-btn-large">🚀 进入产品 Demo</a>
+    <div class="lp-cta-links"><a href="https://github.com/fudimo123/hezu-life-manager" target="_blank" rel="noopener">查看源码仓库 ↗</a></div>
+  </section>
+
+  <footer class="lp-footer">
+    <p>🏠 合租生活管家 · 美团 AI Coding 考试作品</p>
+    <p>纯前端实现（HTML / CSS / JavaScript，零框架零后端）· 数据存储于浏览器 localStorage · 支持移动端与桌面端</p>
+  </footer>
+</div>
+
+<!-- ================= 产品 Demo（App） ================= -->
+<div id="view-app" class="hidden">
+  <div class="app-frame">
+    <header class="app-header">
+      <div class="app-header-left">
+        <div class="app-home-name" id="app-home-name">🏠 我们的家</div>
+        <div class="app-home-sub" id="app-home-sub">—</div>
+      </div>
+      <button class="app-avatar-stack" id="btn-members" title="成员管理">
+        <span id="avatar-stack"></span>
+      </button>
+    </header>
+
+    <main id="app-main"></main>
+
+    <div class="app-fab" id="app-fab" title="快捷操作">
+      <span class="fab-icon">＋</span><span class="fab-label" id="fab-label">记一笔</span>
+    </div>
+
+    <nav class="app-nav" id="app-nav">
+      <button data-tab="overview"><span class="nav-ic">🏠</span><span class="nav-tx">总览</span></button>
+      <button data-tab="expenses"><span class="nav-ic">💰</span><span class="nav-tx">账单</span></button>
+      <button data-tab="chores"><span class="nav-ic">🧹</span><span class="nav-tx">值日</span></button>
+      <button data-tab="items"><span class="nav-ic">📦</span><span class="nav-tx">物品</span></button>
+      <button data-tab="covenant"><span class="nav-ic">📜</span><span class="nav-tx">公约</span></button>
+    </nav>
+  </div>
+</div>
+
+<div id="modal-root"></div>
+<div id="toast-root"></div>
+
+<script src="./js/store.js"></script>
+<script src="./js/ui.js"></script>
+<script src="./js/views/overview.js"></script>
+<script src="./js/views/expenses.js"></script>
+<script src="./js/views/chores.js"></script>
+<script src="./js/views/items.js"></script>
+<script src="./js/views/covenant.js"></script>
+<script src="./js/views/members.js"></script>
+<script src="./js/router.js"></script>
+</body>
+</html>
