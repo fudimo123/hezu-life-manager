@@ -547,10 +547,13 @@
         <div class="app-home-sub" id="app-home-sub">—</div>
       </div>
       <div class="app-header-right">
+        <span class="cloud-badge desktop-only" id="cloud-badge">⚪ 本地模式</span>
+        <button class="hdr-btn desktop-only" id="btn-quickadd" title="快捷键 N">＋ 记一笔</button>
+        <button class="hdr-btn" id="btn-viewmode" title="切换视图模式">🅰️ 自适应</button>
         <button class="app-bell" id="btn-reminders" title="提醒中心">
           <span>🔔</span><span class="bell-dot hidden" id="bell-dot"></span>
         </button>
-        <button class="app-help" id="btn-help" title="功能地图">
+        <button class="app-help" id="btn-help" title="功能地图（?）">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.4 2.3c-.8.3-1.4 1-1.4 1.7"/><circle cx="12" cy="17" r="0.5" fill="currentColor"/></svg>
         </button>
         <button class="app-avatar-stack" id="btn-members" title="成员管理">
@@ -566,6 +569,7 @@
     </div>
 
     <nav class="app-nav" id="app-nav">
+      <div class="nav-group-label desktop-only">🏠 核心功能</div>
       <button data-tab="overview">
         <span class="nav-ic"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.8 12 3.5l9 7.3V20a1 1 0 0 1-1 1h-5.2v-6.2h-5.6V21H4a1 1 0 0 1-1-1z"/></svg></span><span class="nav-tx">总览</span><i class="nav-dot"></i>
       </button>
@@ -581,6 +585,14 @@
       <button data-tab="covenant">
         <span class="nav-ic"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3.5h9a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-14a2 2 0 0 1 2-2z"/><path d="M9.5 8.5h5"/><path d="M9.5 12h5"/><path d="M9.5 15.5h3"/></svg></span><span class="nav-tx">公约</span><i class="nav-dot"></i>
       </button>
+      <div class="nav-group-label desktop-only">✨ 智能与社区</div>
+      <button class="nav-extra" id="nav-ai"><span class="nav-ic">🤖</span><span class="nav-tx">AI 管家</span></button>
+      <button class="nav-extra" id="nav-plaza"><span class="nav-ic">🏛️</span><span class="nav-tx">公约广场</span></button>
+      <button class="nav-extra" id="nav-recruit"><span class="nav-ic">🤝</span><span class="nav-tx">找室友评估</span></button>
+      <button class="nav-extra" id="nav-members2"><span class="nav-ic">👥</span><span class="nav-tx">成员管理</span></button>
+      <div class="sidebar-cloud desktop-only" id="sidebar-cloud"></div>
+      <div class="sidebar-kbd desktop-only">快捷键<br>1-5 切换页面 · N 记一笔<br>? 功能地图 · Esc 关闭</div>
+      <button class="nav-extra" id="nav-landing"><span class="nav-ic">↩️</span><span class="nav-tx">返回产品介绍</span></button>
     </nav>
   </div>
 </div>
