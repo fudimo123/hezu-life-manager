@@ -22,6 +22,13 @@
     <div class="view-anim">
       <div class="ov-greet">${greet}，${st.memberName(me.id)} 👋<small>${st.home.name}</small></div>
 
+      ${st.allReminders().length ? `
+      <div class="rem-banner" id="rem-banner">
+        <span class="rb-ic">🔔</span>
+        <div class="rb-tx">你有 <b>${st.allReminders().length}</b> 条待办提醒（值日 / 库存 / 结算 / 投票）</div>
+        <button class="rb-go">查看 ›</button>
+      </div>` : ''}
+
       <div class="ov-hero">
         <div class="label">本月支出 · ${mk}</div>
         <div class="amount">${st.fmtMoney(total)}<small> / ${actives.length} 人</small></div>
@@ -41,7 +48,7 @@
       </div>
 
       <div class="sec">
-        <div class="section-title">🧹 今日值日 <span class="more">${tds.length ? tds.filter((t) => !t.done).length + ' 项待完成' : '今天无值日任务'}</span></div>
+        <div class="section-title">🧹 今日值日 <span class="more">🔥 全屋连续 ${st.houseStreak()} 天 · ${tds.length ? tds.filter((t) => !t.done).length + ' 项待完成' : '今天无值日任务'}</span></div>
         ${tds.length ? tds.map((t) => `
           <div class="duty-task ${t.done ? 'done' : ''}">
             <span class="li-ic" style="background:#E9F1FF">${t.chore.icon}</span>
@@ -97,6 +104,8 @@
     </div>`;
 
     // 事件
+    const banner = el.querySelector('#rem-banner');
+    if (banner) banner.addEventListener('click', () => Views.reminders());
     el.querySelectorAll('[data-go]').forEach((b) => b.addEventListener('click', () => {
       const g = b.dataset.go;
       if (g === 'addBill') Views.expenses.addBill();
