@@ -41,6 +41,13 @@
         </div>`;
       }).join('')}
       </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-outline" id="m-add" style="flex:1">＋ 添加室友</button>
+        <button class="btn btn-purple" id="m-recruit" style="flex:1">🤝 找室友评估</button>
+      </div>
+
+      <div class="section-title" style="margin-top:22px">🏠 共享之家（云同步）</div>
+      <div id="cloud-panel"></div>
       <button class="btn btn-outline btn-block" id="m-add">＋ 添加室友</button>
 
       <div class="section-title" style="margin-top:22px">🗄️ 数据与设置</div>
@@ -84,7 +91,9 @@
       });
     }));
     modal.root.querySelector('#m-add').addEventListener('click', () => addMember());
+    modal.root.querySelector('#m-recruit').addEventListener('click', () => Views.recruit());
     modal.root.querySelector('#m-ai').addEventListener('click', () => Views.aiSettings());
+    renderCloudPanel(modal.root.querySelector('#cloud-panel'), modal);
     modal.root.querySelector('#m-export').addEventListener('click', () => { st.exportData(); UI.toast('数据已导出'); });
     modal.root.querySelector('#m-import').addEventListener('click', () => modal.root.querySelector('#m-file').click());
     modal.root.querySelector('#m-file').addEventListener('change', (e) => {
@@ -104,6 +113,63 @@
         st.reset(); UI.toast('已恢复演示数据', '🔄');
         modal.close(); Router.render(); Router.renderHeader();
       });
+    });
+  }
+
+  /* ---------- 共享之家（云同步）面板 ---------- */
+  function renderCloudPanel(el, modal) {
+    if (!el) return;
+    const st = S();
+    const joined = Cloud.isJoined();
+    if (!joined) {
+      el.innerHTML = `
+        <div class="cloud-card">
+          <p class="cloud-desc">把家搬上云端：室友输入邀请码加入后，<b>账本 · 值日 · 库存 · 公约实时共享</b>，谁记的账大家都能看到。</p>
+          <button class="btn btn-primary btn-block" id="c-create">🏠 创建共享之家</button>
+          <div style="display:flex;gap:6px;margin-top:8px">
+            <input class="f-input" id="c-code" placeholder="输入 6 位邀请码" maxlength="6" style="text-transform:uppercase;flex:1">
+            <button class="btn btn-green" id="c-join">加入</button>
+          </div>
+        </div>`;
+      el.querySelector('#c-create').addEventListener('click', async () => { await Cloud.createHome(); renderCloudPanel(el, modal); Router.renderHeader(); });
+      const joinBtn = el.querySelector('#c-join');
+      const codeInput = el.querySelector('#c-code');
+      const doJoin = async () => {
+        const code = codeInput.value.trim().toUpperCase();
+        if (code.length !== 6) { UI.toast('请输入 6 位邀请码', '⚠️'); return; }
+        const okr = await Cloud.joinHome(code);
+        if (okr) { modal.close(); Router.render(); Router.renderHeader(); }
+      };
+      joinBtn.addEventListener('click', doJoin);
+      codeInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') doJoin(); });
+      return;
+    }
+    const c = st.state().cloud;
+    const online = Cloud.status.online || [];
+    const inviteLink = 'https://fudimo123.github.io/hezu-life-manager/#/app?join=' + c.code;
+    el.innerHTML = `
+      <div class="cloud-card joined">
+        <div class="cloud-code-row">
+          <span class="cloud-label">邀请码</span>
+          <b>${UI.esc(c.code)}</b>
+          <button class="btn btn-soft btn-sm" id="c-copy">复制邀请链接</button>
+        </div>
+        <div class="cloud-status-row">
+          <span>🟢 已连接 · 版本 v${c.version}</span>
+          <span>${Cloud.status.error ? '⚠️ ' + UI.esc(Cloud.status.error) : (c.lastSync ? (Math.round((Date.now() - c.lastSync) / 1000) + 's 前同步') : '')}</span>
+        </div>
+        <div class="cloud-online">
+          在线成员：${online.length
+            ? online.map((id) => { const m = st.member(id); return m ? m.emoji + ' ' + UI.esc(m.name) : ''; }).filter(Boolean).join(' · ')
+            : '暂无其他设备在线'}
+        </div>
+        <button class="btn btn-block" style="background:var(--red-soft);color:var(--red);margin-top:8px" id="c-leave">退出共享之家</button>
+      </div>`;
+    el.querySelector('#c-copy').addEventListener('click', () => UI.copyText('🏠 邀请你加入我们的合租生活管家共享之家，邀请码：' + c.code + '，或直接打开链接加入：' + inviteLink));
+    el.querySelector('#c-leave').addEventListener('click', () => {
+      UI.openModal('👋 退出共享之家', '<p style="font-size:14px;color:var(--ink2)">退出后本机数据保留，但不再与云端同步。确定退出？</p>',
+        `<button class="btn btn-soft" data-close>取消</button><button class="btn" style="background:var(--red-soft);color:var(--red)" id="c-leave-ok">确认退出</button>`
+      ).submit('#c-leave-ok', () => { Cloud.leaveHome(); renderCloudPanel(el, modal); Router.renderHeader(); });
     });
   }
 
