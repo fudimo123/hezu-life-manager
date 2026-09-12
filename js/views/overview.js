@@ -20,7 +20,7 @@
 
     el.innerHTML = `
     <div class="view-anim">
-      <div class="ov-greet">${greet}，${st.memberName(me.id)} 👋<small>${st.home.name}</small></div>
+      <div class="ov-greet">${greet}，${st.memberName(me.id)} 👋<small>${st.state().home.name}</small></div>
 
       ${st.allReminders().length ? `
       <div class="rem-banner" id="rem-banner">
