@@ -717,24 +717,25 @@ body.force-mobile #app-main { padding-left: 16px; padding-right: 16px; }
 body.modal-open { overflow: hidden; }
 
 /* 桌面端：表格列 + 每页网格布局 */
-.desktop-view .bill-row { grid-template-columns: 44px minmax(150px, 1.6fr) 92px 108px 96px 96px 96px 116px; grid-template-areas: "ic title date payer split share confirm amt"; gap: 12px; padding: 12px 18px; border-left-width: 3px; }
+.desktop-view .bill-row { grid-template-columns: 44px minmax(0, 1.6fr) 84px 96px 84px 84px 84px 108px; grid-template-areas: "ic title date payer split share confirm amt"; gap: 10px; padding: 12px 16px; border-left-width: 3px; }
 .desktop-view .b-meta { display: contents; }
-.desktop-view .bm-date { grid-area: date; }
-.desktop-view .bm-payer { grid-area: payer; }
-.desktop-view .bm-split { grid-area: split; justify-self: start; }
-.desktop-view .bm-share { grid-area: share; }
-.desktop-view .bm-confirm { grid-area: confirm; }
-.desktop-view .b-amt { text-align: right; }
+.desktop-view .bm-date { grid-area: date; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.desktop-view .bm-payer { grid-area: payer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.desktop-view .bm-split { grid-area: split; justify-self: start; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.desktop-view .bm-share { grid-area: share; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.desktop-view .bm-confirm { grid-area: confirm; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.desktop-view .b-amt { text-align: right; white-space: nowrap; }
 .desktop-view .bill-table-head {
   display: grid;
-  grid-template-columns: 44px minmax(150px, 1.6fr) 92px 108px 96px 96px 96px 116px;
-  gap: 12px; padding: 0 18px 10px; font-size: 12px; font-weight: 800; color: var(--ink3);
+  grid-template-columns: 44px minmax(0, 1.6fr) 84px 96px 84px 84px 84px 108px;
+  gap: 10px; padding: 0 16px 10px; font-size: 12px; font-weight: 800; color: var(--ink3);
   align-items: center;
 }
 .desktop-view .bill-table-head span:last-child { text-align: right; }
 
-.desktop-view .chore-row { grid-template-columns: 44px minmax(150px, 1.6fr) 110px 96px 76px 110px 110px; grid-template-areas: "ic title freq count pts next who"; gap: 12px; padding: 12px 18px; }
+.desktop-view .chore-row { grid-template-columns: 44px minmax(0, 1.6fr) 96px 90px 70px 100px 96px; grid-template-areas: "ic title freq count pts next who"; gap: 10px; padding: 12px 16px; }
 .desktop-view .c-meta { display: contents; }
+.desktop-view .c-meta > span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .desktop-view .cm-freq { grid-area: freq; }
 .desktop-view .cm-count { grid-area: count; }
 .desktop-view .cm-pts { grid-area: pts; }
@@ -742,8 +743,8 @@ body.modal-open { overflow: hidden; }
 .desktop-view .cm-who { grid-area: who; }
 .desktop-view .chore-table-head {
   display: grid;
-  grid-template-columns: 44px minmax(150px, 1.6fr) 110px 96px 76px 110px 110px;
-  gap: 12px; padding: 0 18px 10px; font-size: 12px; font-weight: 800; color: var(--ink3);
+  grid-template-columns: 44px minmax(0, 1.6fr) 96px 90px 70px 100px 96px;
+  gap: 10px; padding: 0 16px 10px; font-size: 12px; font-weight: 800; color: var(--ink3);
   align-items: center;
 }
 
@@ -754,8 +755,8 @@ body.modal-open { overflow: hidden; }
 .desktop-view .inv-grid { grid-template-columns: repeat(3, 1fr); }
 
 /* ---------- 9b. 各页桌面网格 ---------- */
-/* 总览：三栏 */
-.desktop-view .view-anim { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px 24px; }
+/* 总览：三栏（minmax(0,1fr) 防最小内容撑破轨道） */
+.desktop-view .view-anim { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px 24px; }
 .desktop-view .view-anim > * { margin: 0; break-inside: auto; }
 .desktop-view .ov-greet { grid-area: greet; }
 .desktop-view .rem-banner { grid-area: rem; }
@@ -787,7 +788,7 @@ body.modal-open { overflow: hidden; }
 .desktop-view .sec-duty .duty-task, .desktop-view .sec-settle .settle-line, .desktop-view .sec-stock .list-item { margin-bottom: 8px; }
 
 /* 账单页 */
-.desktop-view .exp-view { grid-template-columns: 2fr 1fr; grid-template-areas:
+.desktop-view .exp-view { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); grid-template-areas:
   "month month"
   "sum sum"
   "bills settle"
@@ -803,7 +804,7 @@ body.modal-open { overflow: hidden; }
 .desktop-view .exp-view .sec-trend { grid-area: trend; }
 
 /* 值日页 */
-.desktop-view .chores-view { grid-template-columns: 2fr 1fr; grid-template-areas:
+.desktop-view .chores-view { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); grid-template-areas:
   "hero hero"
   "week rank"
   "tasks rank"; }
@@ -813,7 +814,7 @@ body.modal-open { overflow: hidden; }
 .desktop-view .chores-view .sec-rank { grid-area: rank; }
 
 /* 物品页 */
-.desktop-view .items-view { grid-template-columns: 2fr 1fr; grid-template-areas:
+.desktop-view .items-view { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); grid-template-areas:
   "sum sum"
   "grid rem"
   "grid logs"; }
@@ -826,7 +827,7 @@ body.modal-open { overflow: hidden; }
 .desktop-view .sec-logs { grid-area: logs; }
 
 /* 公约页 */
-.desktop-view .cov-view { grid-template-columns: 2fr 1fr; grid-template-areas:
+.desktop-view .cov-view { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); grid-template-areas:
   "plaza plaza"
   "list side"; }
 .desktop-view .cov-view .plaza-banner { grid-area: plaza; }
