@@ -78,8 +78,9 @@
           <div class="vio-row"><span>🚫</span><span style="flex:1">${st.memberName(v.memberId)} · ${UI.esc(v.note)}</span><span class="when">${v.date}</span></div>`).join('')}
       </div>` : '';
 
+    const catColor = { fee: '#0EA47A', clean: '#2E86AB', sleep: '#7C5CF0', pet: '#F5A623', other: '#98A0AE' }[c.cat] || '#98A0AE';
     return `
-    <div class="cov-card">
+    <div class="cov-card" style="border-left:4px solid ${catColor}">
       <div class="cov-top">
         <span class="cov-ic">${c.icon || cat.icon}</span>
         <div class="cov-title">${UI.esc(c.title)}</div>
