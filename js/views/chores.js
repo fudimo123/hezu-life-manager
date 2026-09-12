@@ -12,7 +12,7 @@
     const myRank = ranked.findIndex((m) => m.id === me.id) + 1;
 
     el.innerHTML = `
-    <div class="view-anim">
+    <div class="view-anim chores-view">
       <div class="duty-hero">
         <div class="dh-title">📅 ${st.WEEK_CN[new Date().getDay()]} · ${st.todayStr()} · 🔥 全屋连续值日 <b>${st.houseStreak()}</b> 天</div>
         <div class="dh-name">今日值日 ${tds.length ? '· ' + tds.filter((t) => !t.done).length + ' 项待完成' : '· 无任务'}</div>
@@ -33,7 +33,7 @@
         : `<div style="background:rgba(255,255,255,.16);border-radius:12px;padding:14px;text-align:center">🎉 今天没有值日任务，好好休息～</div>`}
       </div>
 
-      <div class="sec">
+      <div class="sec sec-week">
         <div class="section-title">🗓️ 本周排班</div>
         <div class="week-strip">
           ${week.map((d) => {
@@ -51,13 +51,16 @@
         <div class="f-hint" style="padding-left:4px">💡 系统按成员顺序自动轮值；成员退租后自动从轮值名单中移除。</div>
       </div>
 
-      <div class="sec">
+      <div class="sec sec-tasks">
         <div class="section-title">📋 值日任务 <span class="more">${st.state().chores.length} 项</span></div>
+        <div class="chore-table-head">
+          <span>任务</span><span>频率</span><span>完成</span><span>积分</span><span>下次值日</span><span>值日人</span>
+        </div>
         ${st.state().chores.map(choreRow).join('')}
         <button class="btn btn-outline btn-block" id="btn-add-chore">＋ 添加值日任务</button>
       </div>
 
-      <div class="sec">
+      <div class="sec sec-rank">
         <div class="section-title">🏆 积分榜 <span class="more">我的排名：#${myRank}</span></div>
         ${ranked.map((m, i) => `
           <div class="rank-row">
@@ -99,15 +102,15 @@
     const next = st.nextDuty(c);
     const doneCount = c.history.length;
     return `
-    <div class="list-item">
+    <div class="chore-row">
       <span class="li-ic" style="background:#E9F1FF">${c.icon}</span>
-      <div class="li-main">
-        <div class="li-title">${UI.esc(c.title)}</div>
-        <div class="li-sub">${freqLabel(c)} · 已完成 ${doneCount} 次 · +${c.points} 分/次</div>
-      </div>
-      <div class="li-right">
-        <div class="li-tag" style="font-weight:700;color:var(--blue)">下次 ${next ? next.date.slice(5) : '—'}</div>
-        <div class="li-tag">${next ? st.memberName(next.memberId) : '—'} 值日</div>
+      <div class="c-title">${UI.esc(c.title)}</div>
+      <div class="c-meta">
+        <span class="cm-freq">${freqLabel(c)}</span>
+        <span class="cm-count">已完成 ${doneCount} 次</span>
+        <span class="cm-pts">+${c.points} 分/次</span>
+        <span class="cm-next" style="color:var(--blue);font-weight:700">下次 ${next ? next.date.slice(5) : '—'}</span>
+        <span class="cm-who">${next ? st.memberName(next.memberId) : '—'} 值日</span>
       </div>
     </div>`;
   }
