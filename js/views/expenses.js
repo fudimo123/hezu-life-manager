@@ -23,7 +23,7 @@
     const stls = st.settlements(mk);
 
     el.innerHTML = `
-    <div class="view-anim">
+    <div class="view-anim exp-view">
       <div class="month-switch">
         <button data-m="-1">‹</button>
         <div class="ms-label">${mk}<span>${isCur ? '本月' : '历史月'}</span></div>
@@ -37,7 +37,7 @@
       </div>
 
       ${isCur ? `
-      <div class="sec">
+      <div class="sec sec-settle">
         <div class="section-title">🤝 结算中心 <span class="more">${stls.filter((t) => !t.done).length} 笔未结清</span></div>
         <div class="settle-card">
           ${stls.length ? stls.map((t) => `
@@ -56,22 +56,25 @@
         </div>
       </div>` : ''}
 
-      <div class="sec">
+      <div class="sec sec-bills">
         <div class="section-title">🧾 账单明细 <span class="more">${bills.length} 笔</span></div>
         <div class="chip-row">
           <button class="chip ${filter === 'all' ? 'on' : ''}" data-f="all">全部</button>
           ${Object.keys(st.BILL_TYPES).map((k) => `<button class="chip ${filter === k ? 'on' : ''}" data-f="${k}">${st.BILL_TYPES[k].icon} ${st.BILL_TYPES[k].name}</button>`).join('')}
         </div>
+        <div class="bill-table-head">
+          <span>类型</span><span>标题</span><span>日期</span><span>垫付人</span><span>分摊</span><span>我摊</span><span>对账</span><span>金额</span>
+        </div>
         ${bills.length ? bills.map(billRow).join('')
           : `<div class="card card-pad empty"><span class="empty-ic">🧾</span>该分类下暂无账单</div>`}
       </div>
 
-      <div class="sec">
+      <div class="sec sec-cat">
         <div class="section-title">📊 本月分类占比</div>
         <div class="card card-pad">${categoryBreakdown(mk)}</div>
       </div>
 
-      <div class="sec">
+      <div class="sec sec-trend">
         <div class="section-title">📈 近 6 个月趋势</div>
         <div class="card card-pad"><div class="bar-chart">${bars()}</div></div>
       </div>
@@ -109,18 +112,17 @@
     const myShare = b.split.shares[st.currentUser().id] || 0;
     const cf = st.billConfirm(b);
     return `
-    <div class="bill-row" data-detail="${b.id}" style="cursor:pointer;border-left:4px solid ${t.color}">
+    <div class="bill-row" data-detail="${b.id}" style="border-left-color:${t.color}">
       <span class="bill-type-ic" style="background:${t.color}">${t.icon}</span>
-      <div class="li-main">
-        <div class="li-title">${UI.esc(b.title)}</div>
-        <div class="li-sub">${b.date} · ${st.memberName(b.payerId)} 垫付 <span class="split-tag">${st.SPLIT_NAMES[b.split.mode]}</span>
-          ${cf.total ? `<span class="confirm-tag ${cf.confirmed ? 'ok' : ''}">${cf.confirmed ? '✓ 已对账' : `对账 ${cf.done}/${cf.total}`}</span>` : ''}
-        </div>
+      <div class="b-title">${UI.esc(b.title)}</div>
+      <div class="b-meta">
+        <span class="bm-date">${b.date}</span>
+        <span class="bm-payer">${st.memberName(b.payerId)} 垫付</span>
+        <span class="bm-split">${st.SPLIT_NAMES[b.split.mode]}</span>
+        <span class="bm-share">我摊 ${st.fmtMoney(myShare)}</span>
+        <span class="bm-confirm ${cf.confirmed ? 'ok' : ''}">${cf.total ? (cf.confirmed ? '✓ 已对账' : `对账 ${cf.done}/${cf.total}`) : ''}</span>
       </div>
-      <div class="li-right">
-        <div class="li-amount">${st.fmtMoney(b.amount)}</div>
-        <div class="li-tag">我摊 ${st.fmtMoney(myShare)}</div>
-      </div>
+      <div class="b-amt">${st.fmtMoney(b.amount)}</div>
     </div>`;
   }
 
@@ -170,7 +172,7 @@
     const dep = st.state().deposit;
     const remain = st.depositRemain();
     return `
-    <div class="sec">
+    <div class="sec sec-deposit">
       <div class="section-title">🏦 押金清算 <span class="more">${UI.esc(dep.landlord)}</span></div>
       <div class="deposit-card" id="deposit-card">
         <div class="dep-head">
