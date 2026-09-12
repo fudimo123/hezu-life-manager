@@ -13,6 +13,11 @@
 
     el.innerHTML = `
     <div class="view-anim">
+      <div class="plaza-banner" id="plaza-banner">
+        <span class="pb-ic">🏛️</span>
+        <div class="pb-tx"><b>公约广场</b><span>采用社区热门公约 · 分享你家的好公约</span></div>
+        <button class="pb-go">进入 ›</button>
+      </div>
       <div class="sec">
         <div class="section-title">📜 我们的公约 <span class="more">${st.state().covenants.length} 条</span></div>
         <div class="chip-row">
@@ -29,6 +34,8 @@
     </div>`;
 
     el.querySelectorAll('[data-f]').forEach((b) => b.addEventListener('click', () => { filter = b.dataset.f; render(el); }));
+    const plaza = el.querySelector('#plaza-banner');
+    if (plaza) plaza.addEventListener('click', () => Views.plaza());
     el.querySelectorAll('[data-vote]').forEach((b) => b.addEventListener('click', () => {
       const cov = st.voteCov(b.dataset.vote, me.id, b.dataset.choice);
       if (cov) UI.toast(cov.status === 'active' ? '🎉 公约已生效！' : cov.status === 'rejected' ? '投票结束，公约未通过' : '投票成功');
