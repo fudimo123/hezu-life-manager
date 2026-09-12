@@ -80,7 +80,21 @@
 
 可在「室友管理」中切换当前身份、添加/退租成员、重置演示数据或导入导出备份。
 
-## 八、迭代计划（Roadmap）
+## 八、部署与迭代规范（域名永不更换）
+
+> ⚠️ **项目铁律：作品唯一入口为 `https://fudimo123.github.io/hezu-life-manager/`，所有迭代只更新此站点，禁止更换域名。**
+
+- **域名机制**：GitHub Pages 域名与仓库名（`fudimo123/hezu-life-manager`）永久绑定，仓库不可重命名、不可删除，域名即永久稳定。
+- **迭代方式**：更新本仓库代码后重新部署即可，链接不变。两种方式：
+  1. 在 GitHub 网页端直接编辑仓库文件，保存后 Pages 自动重新构建（约 1 分钟生效）；
+  2. 本地改完代码，用固化脚本部署：
+     ```powershell
+     $env:GH_TOKEN = (gh auth token)
+     node deploy/deploy-pages.js
+     ```
+     （本机直连 github.com:443 的 git push 被网络阻断，故脚本走 GitHub API 上传；脚本内 OWNER/REPO 为固定常量，自动跳过未变更文件，构建完成后打印不变的站点地址。）
+
+## 九、迭代计划（Roadmap）
 
 - [ ] 群组协同（多端实时同步、微信提醒推送）
 - [ ] 值日「请假/换班」流程与免值日券兑换
