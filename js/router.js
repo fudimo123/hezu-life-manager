@@ -19,11 +19,18 @@
     return { app: false, tab: null };
   }
 
+  function updateBell() {
+    const n = Store.allReminders().length;
+    const dot = document.getElementById('bell-dot');
+    if (dot) dot.classList.toggle('hidden', n === 0);
+  }
+
   function renderHeader() {
     const st = Store;
     document.getElementById('app-home-name').textContent = '🏠 ' + st.state().home.name;
     document.getElementById('app-home-sub').textContent = st.state().home.address + ' · ' + st.activeMembers().length + ' 位室友';
     document.getElementById('avatar-stack').innerHTML = UI.avatarStack(st.activeMembers());
+    updateBell();
   }
 
   function render() {
@@ -37,6 +44,7 @@
     const conf = FAB_CONF[currentTab];
     document.getElementById('fab-label').textContent = conf.label;
     fab.onclick = conf.fn;
+    updateBell();
   }
 
   function go(tab) {
@@ -72,6 +80,7 @@
   window.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('#app-nav button').forEach((b) => b.addEventListener('click', () => go(b.dataset.tab)));
     document.getElementById('btn-members').addEventListener('click', () => Views.membersDrawer());
+    document.getElementById('btn-reminders').addEventListener('click', () => Views.reminders());
     route();
   });
 
