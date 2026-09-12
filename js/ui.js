@@ -41,9 +41,11 @@
         </div>
       </div>`;
     const bd = root.querySelector('#modal-backdrop');
-    const close = () => { root.innerHTML = ''; };
+    const close = () => { root.innerHTML = ''; syncBodyLock(); };
     bd.addEventListener('click', (e) => { if (e.target === bd) close(); });
-    root.querySelector('[data-close]').addEventListener('click', close);
+    // 绑定全部「关闭/取消」按钮（标题✕、actions 里的取消等）
+    bd.querySelectorAll('[data-close]').forEach((b) => b.addEventListener('click', close));
+    syncBodyLock();
     return {
       root: bd.querySelector('.modal-sheet'),
       close,
@@ -53,6 +55,23 @@
       },
     };
   }
+
+  /* 弹窗打开时锁定背景滚动（覆盖所有关闭路径，含直接清空 modal-root） */
+  function syncBodyLock() {
+    const root = document.getElementById('modal-root');
+    document.body.classList.toggle('modal-open', !!root.children.length);
+  }
+  (function watchModalRoot() {
+    if (typeof MutationObserver === 'undefined') return;
+    const t = setInterval(() => {
+      const root = document.getElementById('modal-root');
+      if (!root) return;
+      clearInterval(t);
+      new MutationObserver(() => {
+        document.body.classList.toggle('modal-open', !!root.children.length);
+      }).observe(root, { childList: true });
+    }, 50);
+  })();
 
   /* ---------- 表单控件 ---------- */
   function fGroup(label, controlHTML, hint = '') {
