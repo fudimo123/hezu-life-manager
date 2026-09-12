@@ -104,15 +104,15 @@
     </div>`;
   }
 
-  /* ---------- 发起公约 ---------- */
-  function addCovenant() {
+  /* ---------- 发起公约（支持 AI 模板预填） ---------- */
+  function addCovenant(preset = {}) {
     const st = S();
     const body = `
-      ${UI.fGroup('公约标题', UI.fInput('v-title', '', '如：23:00 后保持安静'))}
-      ${UI.fGroup('分类', UI.fSelect('v-cat', Object.keys(st.COV_CATS).map((k) => ({ value: k, label: `${st.COV_CATS[k].icon} ${st.COV_CATS[k].name}` }))))}
-      ${UI.fGroup('公约内容', UI.fTextarea('v-content', '', '写清楚约定内容与执行标准，越具体越好'))}
+      ${UI.fGroup('公约标题', UI.fInput('v-title', preset.title || '', '如：23:00 后保持安静'))}
+      ${UI.fGroup('分类', UI.fSelect('v-cat', Object.keys(st.COV_CATS).map((k) => ({ value: k, label: `${st.COV_CATS[k].icon} ${st.COV_CATS[k].name}` })), preset.cat || 'other'))}
+      ${UI.fGroup('公约内容', UI.fTextarea('v-content', preset.content || '', '写清楚约定内容与执行标准，越具体越好'))}
     `;
-    const modal = UI.openModal('📜 发起新公约', body,
+    const modal = UI.openModal(preset.title ? '📜 发起公约 · AI 已起草' : '📜 发起新公约', body,
       `<button class="btn btn-soft" data-close>取消</button><button class="btn btn-purple" id="v-save">发起投票</button>`);
     modal.submit('#v-save', (root) => {
       const title = UI.val('v-title');
