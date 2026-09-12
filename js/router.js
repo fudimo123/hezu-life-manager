@@ -81,6 +81,7 @@
     document.querySelectorAll('#app-nav button').forEach((b) => b.addEventListener('click', () => go(b.dataset.tab)));
     document.getElementById('btn-members').addEventListener('click', () => Views.membersDrawer());
     document.getElementById('btn-reminders').addEventListener('click', () => Views.reminders());
+    document.getElementById('btn-help').addEventListener('click', () => Views.guide());
     route();
   });
 
