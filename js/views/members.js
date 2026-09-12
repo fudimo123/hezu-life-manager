@@ -51,13 +51,19 @@
     modal.root.querySelectorAll('[data-edit]').forEach((b) => b.addEventListener('click', () => editMember(b.dataset.edit)));
     modal.root.querySelectorAll('[data-leave]').forEach((b) => b.addEventListener('click', () => {
       const m = st.member(b.dataset.leave);
+      const ls = st.leaveSettlement(m.id);
       UI.openModal('🚪 退租确认',
         `<p style="font-size:14px;color:var(--ink2)">确认 <b>${UI.esc(m.name)}</b> 退租？</p>
-         <p style="font-size:13px;color:var(--ink3);margin-top:8px">退租后：自动退出值日轮值与后续分摊，费用按退租日期精确结算。</p>`,
+         <p style="font-size:13px;color:var(--ink3);margin-top:8px">退租后：自动退出值日轮值与后续分摊，费用按退租日期精确结算。</p>
+         <div class="leave-settle">
+           <div><span>押金份额</span><b>+ ${st.fmtMoney(ls.share)}</b></div>
+           <div><span>未结清欠款</span><b style="color:var(--red)">- ${st.fmtMoney(ls.debt)}</b></div>
+           <div class="ls-total"><span>应退金额</span><b>${st.fmtMoney(ls.refund)}</b></div>
+         </div>`,
         `<button class="btn btn-soft" data-close>取消</button><button class="btn" style="background:var(--red-soft);color:var(--red)" id="leave-ok">确认退租</button>`
       ).submit('#leave-ok', () => {
         m.left = st.todayStr(); st.save();
-        UI.toast(`${m.name} 已办理退租，账单按天结算`);
+        UI.toast(`${m.name} 已办理退租，清算单：应退 ${st.fmtMoney(st.leaveSettlement(m.id).refund)}`);
         modal.close(); Router.render(); Router.renderHeader();
       });
     }));
