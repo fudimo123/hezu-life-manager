@@ -23,7 +23,7 @@
     const billCount = st.monthBills(mk).length;
 
     el.innerHTML = `
-    <div class="view-anim">
+    <div class="view-anim ${st.allReminders().length ? '' : 'no-rem'}">
       <div class="ov-greet">${greet}，${st.memberName(me.id)} 👋<small>${st.state().home.name}</small></div>
 
       ${st.allReminders().length ? `
@@ -68,7 +68,7 @@
         <button class="ai-banner-go">试试 ›</button>
       </div>
 
-      <div class="sec">
+      <div class="sec sec-duty">
         <div class="section-title">🧹 今日值日 <span class="more">${tds.length ? tds.filter((t) => !t.done).length + ' 项待完成' : '今天无值日任务'}</span></div>
         ${tds.length ? tds.map((t) => `
           <div class="duty-task ${t.done ? 'done' : ''}">
@@ -84,7 +84,7 @@
         : `<div class="card card-pad empty" style="padding:24px"><span class="empty-ic" style="font-size:32px">🎉</span>今天没有值日任务，享受休息日～</div>`}
       </div>
 
-      <div class="sec">
+      <div class="sec sec-settle">
         <div class="section-title">🤝 结算待办 <span class="more">${undoneSettle ? undoneSettle + ' 笔未结清' : '本月已结清'}</span></div>
         ${stls.length ? stls.slice(0, 3).map((t) => `
           <div class="settle-line card card-pad" style="margin-bottom:8px;padding:10px 14px">
@@ -97,7 +97,7 @@
         <button class="btn btn-outline btn-block" data-go="expenses" style="margin-top:8px">进入结算中心 →</button>
       </div>
 
-      <div class="sec">
+      <div class="sec sec-stock">
         <div class="section-title">🚨 库存预警 <span class="more">${lows.length} 项</span></div>
         ${lows.length ? lows.map((it) => `
           <div class="list-item">
@@ -111,14 +111,14 @@
         : `<div class="card card-pad empty" style="padding:24px"><span class="empty-ic" style="font-size:32px">📦</span>公共物品库存充足</div>`}
       </div>
 
-      <div class="sec">
+      <div class="sec sec-trend">
         <div class="section-title">📈 近 6 个月支出</div>
         <div class="card card-pad">
           <div class="bar-chart">${renderBars()}</div>
         </div>
       </div>
 
-      <div class="sec">
+      <div class="sec sec-feed">
         <div class="section-title">🏡 家动态 <span class="more">点赞评论，把日子过成社区</span></div>
         <div class="card card-pad feed-card">
           ${st.feed(6).map((ev) => {
@@ -142,7 +142,7 @@
         </div>
       </div>
 
-      <div class="sec">
+      <div class="sec sec-recent">
         <div class="section-title">🧾 最近账单 <span class="more" data-go="expenses" style="cursor:pointer">查看全部 →</span></div>
         ${st.state().bills.slice().sort((a, b) => (a.date < b.date ? 1 : -1)).slice(0, 3).map(billRow).join('')}
       </div>
