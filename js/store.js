@@ -55,10 +55,27 @@
   function load() {
     try {
       const raw = localStorage.getItem(KEY);
-      if (raw) { const s = JSON.parse(raw); if (s && s.v === 1 && s.members) return s; }
+      if (raw) { const s = JSON.parse(raw); if (s && s.v === 1 && s.members) return migrate(s); }
     } catch (e) { /* ignore */ }
     return null;
   }
+  // 老版本本地数据平滑迁移（保证已访问用户拿到新功能）
+  function migrate(s) {
+    let dirty = false;
+    if (!s.settled) { s.settled = {}; dirty = true; }
+    if (!s.confirms) { s.confirms = {}; dirty = true; }
+    if (!s.deposit) {
+      s.deposit = {
+        amount: 6800, landlord: '王阿姨',
+        note: '押一付三 · 押金用于房屋损坏赔偿，退租时结算',
+        deductions: [{ id: uid(), date: daysAgo(40), title: '客厅灯泡更换（从押金扣除）', amount: 35 }],
+      };
+      dirty = true;
+    }
+    s.chores.forEach((c) => { if (!c.leaves) { c.leaves = []; dirty = true; } });
+    return dirty ? (saveState(s), s) : s;
+  }
+  function saveState(s) { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) { /* ignore */ } }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { console.warn('save fail', e); } }
   function reset() { state = seed(); save(); }
 
@@ -160,7 +177,20 @@
       currentUserId: 'm1',
       members, bills, chores, items, covenants,
       settled: {},
+      confirms: {},
+      deposit: {
+        amount: 6800, landlord: '王阿姨',
+        note: '押一付三 · 押金用于房屋损坏赔偿，退租时结算',
+        deductions: [{ id: uid(), date: daysAgo(40), title: '客厅灯泡更换（从押金扣除）', amount: 35 }],
+      },
     };
+    // 账单对账确认（演示：部分账单已确认）
+    const monthBillsArr = bills.filter((b) => monthKey(b.date) === monthKey(todayStr()));
+    monthBillsArr.forEach((b, i) => {
+      const confirmers = [];
+      members.forEach((m) => { if (m.id !== b.payerId && i < 2) confirmers.push(m.id); }); // 前2笔已确认
+      if (confirmers.length) s.confirms[b.id] = confirmers;
+    });
     // 生成值日历史（过去 14 天，除今天）：保证与轮值算法一致
     for (const c of chores) {
       for (let n = 14; n >= 1; n--) {
@@ -275,8 +305,16 @@
     const active = membersAt(dateStr).map((m) => m.id);
     const rot = chore.rotation.filter((id) => active.includes(id));
     if (!rot.length) return null;
-    const idx = occurrenceIndex(chore, dateStr) - 1;
-    return rot[((idx % rot.length) + rot.length) % rot.length];
+    const base = occurrenceIndex(chore, dateStr) - 1;
+    let idx = ((base % rot.length) + rot.length) % rot.length;
+    // 值日人请假 → 顺延给轮值名单下一位
+    for (let k = 0; k < rot.length; k++) {
+      const candidate = rot[idx];
+      const onLeave = (chore.leaves || []).some((l) => l.date === dateStr && l.memberId === candidate);
+      if (!onLeave) return candidate;
+      idx = (idx + 1) % rot.length;
+    }
+    return rot[idx];
   }
   function nextDuty(chore) {
     for (let n = 0; n < 70; n++) {
@@ -311,6 +349,101 @@
     if (assignee) { const m = member(assignee); if (m) m.points += c.points; }
     save();
     return { chore: c, assignee, points: c.points };
+  }
+  function requestLeave(choreId, memberId) {
+    const c = state.chores.find((x) => x.id === choreId);
+    if (!c) return null;
+    if (!c.leaves) c.leaves = [];
+    const ts = todayStr();
+    if (!c.leaves.some((l) => l.date === ts && l.memberId === memberId)) {
+      c.leaves.push({ date: ts, memberId });
+    }
+    save();
+    return c;
+  }
+  // 全屋连续值日天数（今天未打卡则从昨天起算）
+  function houseStreak() {
+    const doneDates = new Set();
+    state.chores.forEach((c) => c.history.forEach((h) => doneDates.add(h.date)));
+    let streak = 0;
+    const d = today();
+    if (!doneDates.has(fmtDate(d))) d.setDate(d.getDate() - 1);
+    while (doneDates.has(fmtDate(d))) { streak++; d.setDate(d.getDate() - 1); }
+    return streak;
+  }
+
+  /* ---------- 账单：对账确认 ---------- */
+  function confirmBill(billId, memberId) {
+    const arr = state.confirms[billId] || [];
+    const i = arr.indexOf(memberId);
+    if (i >= 0) arr.splice(i, 1); else arr.push(memberId);
+    state.confirms[billId] = arr;
+    save();
+    return arr;
+  }
+  function billConfirm(bill) {
+    const others = membersAt(bill.date).map((m) => m.id).filter((id) => id !== bill.payerId);
+    const arr = state.confirms[bill.id] || [];
+    return {
+      done: others.filter((id) => arr.includes(id)).length,
+      total: others.length,
+      mine: arr.includes(state.currentUserId),
+      confirmed: others.length > 0 && others.every((id) => arr.includes(id)),
+    };
+  }
+
+  /* ---------- 押金清算 ---------- */
+  const depositShare = () => { const n = activeMembers().length || 1; return round2(state.deposit.amount / n); };
+  const depositRemain = () => round2(state.deposit.amount - state.deposit.deductions.reduce((s, d) => s + d.amount, 0));
+  function addDeduction(title, amount) {
+    state.deposit.deductions.push({ id: uid(), date: todayStr(), title, amount: round2(amount) });
+    save();
+  }
+  // 退租清算：押金份额 - 欠款 = 应退
+  function leaveSettlement(memberId) {
+    const mk = monthKey(todayStr());
+    const flow = memberFlow(memberId, mk);
+    const debt = flow.net < 0 ? -flow.net : 0;
+    return { share: depositShare(), debt: round2(debt), refund: round2(depositShare() - debt) };
+  }
+
+  /* ---------- 提醒中心：五类提醒聚合 ---------- */
+  function allReminders() {
+    const me = state.currentUserId;
+    const list = [];
+    todayDuties().filter((t) => !t.done).forEach((t) => list.push({
+      type: 'chore', icon: t.chore.icon,
+      title: `今日值日：${t.chore.title}`,
+      sub: `值日人 ${memberName(t.memberId)} · 完成 +${t.chore.points} 积分`,
+      action: 'chores',
+    }));
+    lowItems().forEach((it) => list.push({
+      type: 'stock', icon: it.icon,
+      title: (it.qty <= 0 ? '已用完：' : '库存偏低：') + it.name,
+      sub: it.qty <= 0 ? `剩余 0${it.unit}，需要补货` : `仅剩 ${it.qty}${it.unit}，低于预警线 ${it.low}${it.unit}`,
+      action: 'items',
+    }));
+    settlements(monthKey(todayStr())).filter((t) => !t.done).forEach((t) => list.push({
+      type: 'settle', icon: '💸',
+      title: `待结算：${memberName(t.from)} → ${memberName(t.to)}`,
+      sub: `金额 ${fmtMoney(t.amount)}，可复制催收话术`,
+      action: 'expenses', transferKey: t.key,
+    }));
+    state.covenants.filter((c) => c.status === 'voting' && !c.votes[me]).forEach((c) => list.push({
+      type: 'vote', icon: '🗳️',
+      title: `公约待投票：${c.title}`,
+      sub: `已有 ${covProgress(c).voted}/${covProgress(c).total} 人投票`,
+      action: 'covenant',
+    }));
+    state.covenants.forEach((c) => c.violations.slice().reverse().slice(0, 2).forEach((v) => {
+      if (diffDays(todayStr(), v.date) <= 7) list.push({
+        type: 'violation', icon: '🚫',
+        title: `违约记录：${memberName(v.memberId)}`,
+        sub: `《${c.title}》· ${v.note}`,
+        action: 'covenant',
+      });
+    }));
+    return list;
   }
 
   /* ---------- 物品 ---------- */
@@ -387,9 +520,10 @@
     BILL_TYPES, SPLIT_NAMES, COV_CATS, ITEM_CATS,
     member, membersAt, activeMembers, currentUser, memberName, inHomeDays,
     computeShares, memberFlow, monthBills, monthTotal, settlements, markSettled,
-    isDueOn, occurrenceIndex, assigneeOn, nextDuty, todayDuties, weekPlan, doChore,
+    isDueOn, occurrenceIndex, assigneeOn, nextDuty, todayDuties, weekPlan, doChore, requestLeave, houseStreak,
+    confirmBill, billConfirm, depositShare, depositRemain, addDeduction, leaveSettlement,
     itemStatus, lowItems, consumeItem, restockItem,
     covProgress, voteCov, signCov, addViolation,
-    exportData, importData, uid, round2,
+    allReminders, exportData, importData, uid, round2,
   };
 })();
