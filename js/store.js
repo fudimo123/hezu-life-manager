@@ -196,7 +196,8 @@
       for (let n = 14; n >= 1; n--) {
         const d = new Date(); d.setDate(d.getDate() - n);
         if (isDueOn(c, d)) {
-          c.history.push({ date: fmtDate(d), memberId: assigneeOn(c, fmtDate(d)), doneBy: assigneeOn(c, fmtDate(d)) });
+          const who = assigneeOn(c, fmtDate(d), members);
+          c.history.push({ date: fmtDate(d), memberId: who, doneBy: who });
         }
       }
     }
@@ -301,8 +302,9 @@
     }
     return count;
   }
-  function assigneeOn(chore, dateStr) {
-    const active = membersAt(dateStr).map((m) => m.id);
+  function assigneeOn(chore, dateStr, membersArr) {
+    const source = membersArr || (state ? state.members : []);
+    const active = source.filter((m) => m.joined <= dateStr && (!m.left || m.left > dateStr)).map((m) => m.id);
     const rot = chore.rotation.filter((id) => active.includes(id));
     if (!rot.length) return null;
     const base = occurrenceIndex(chore, dateStr) - 1;
