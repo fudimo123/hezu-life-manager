@@ -87,6 +87,7 @@
     window.Cloud.status.version = version;
     window.Cloud.status.lastSync = Date.now();
     if (window.Router) { Router.render(); Router.renderHeader(); }
+    start(); // 加入/合并后确保轮询与心跳在跑
   }
 
   /* ---------- 本地变更 → 防抖推送 ---------- */
