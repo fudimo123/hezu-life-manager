@@ -34,7 +34,7 @@
 
   /* ---------- 引擎状态 ----------
      优先级：用户自填 Key > 官方代理（部署后填入 DEFAULT_PROXY）> 内置模板 */
-  const DEFAULT_PROXY = ''; // TODO: 部署 Deno 代理后填入，如 'https://hezu-ai-xxxx.deno.dev/chat'
+  const DEFAULT_PROXY = 'https://hezu-ai-proxy.fudimo123.deno.net/chat'; // 官方代理（Key 存于 Deno 服务端环境变量，前端不含任何密钥）
   function engine() {
     const a = Store.state().ai || {};
     if (a.key && a.key.trim()) {
