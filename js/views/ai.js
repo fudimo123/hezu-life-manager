@@ -41,13 +41,16 @@
   }
   const engineLabel = () => hasKey() ? `🟢 真实大模型 · ${engineCfg().model || '已配置'}` : '📦 内置模板引擎（未配置 Key）';
 
-  /* ---------- 大模型调用 ---------- */
+  /* ---------- 大模型调用（20 秒超时保护） ---------- */
   async function chat(system, user) {
     const c = engineCfg();
     if (!hasKey() || !c.base || !c.model) return { error: '未配置 API Key' };
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 20000);
     try {
       const r = await fetch(c.base, {
         method: 'POST',
+        signal: ctrl.signal,
         headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + c.key },
         body: JSON.stringify({
           model: c.model,
@@ -55,6 +58,7 @@
           temperature: 0.7,
         }),
       });
+      clearTimeout(timer);
       if (!r.ok) {
         let msg = 'HTTP ' + r.status;
         if (r.status === 401 || r.status === 403) msg += '（API Key 无效或已过期）';
@@ -66,7 +70,8 @@
       if (!text) return { error: '模型返回为空' };
       return { text: String(text).trim() };
     } catch (e) {
-      return { error: '网络错误：' + (e && e.message ? e.message : '无法连接') };
+      clearTimeout(timer);
+      return { error: '网络错误：' + (e && e.name === 'AbortError' ? '请求超时（20s）' : (e && e.message ? e.message : '无法连接')) };
     }
   }
   function extractJson(text) {
