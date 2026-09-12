@@ -11,7 +11,7 @@
     st.state().items.forEach((it) => { counts[st.itemStatus(it)]++; });
 
     el.innerHTML = `
-    <div class="view-anim">
+    <div class="view-anim items-view ${st.lowItems().length ? '' : 'no-rem'}">
       <div class="inv-sum">
         <div class="inv-sum-item"><div class="n" style="color:var(--green)">${counts.ok}</div><div class="k">库存充足</div></div>
         <div class="inv-sum-item"><div class="n" style="color:var(--amber)">${counts.low}</div><div class="k">库存偏低</div></div>
@@ -19,7 +19,7 @@
       </div>
 
       ${st.lowItems().length ? `
-      <div class="sec">
+      <div class="sec sec-rem">
         <div class="section-title">🚨 补货提醒 <span class="more">${st.lowItems().length} 项待处理</span></div>
         ${st.lowItems().map((it) => `
           <div class="list-item" style="border:1px solid ${it.qty <= 0 ? '#FFD3D3' : '#FFE3B3'}">
@@ -32,7 +32,7 @@
           </div>`).join('')}
       </div>` : ''}
 
-      <div class="sec">
+      <div class="sec sec-grid">
         <div class="section-title">📦 公共物品 <span class="more">${st.state().items.length} 件</span></div>
         <div class="chip-row">
           <button class="chip ${filter === 'all' ? 'on' : ''}" data-f="all">全部</button>
@@ -46,7 +46,7 @@
         <button class="btn btn-outline btn-block" id="btn-add-item" style="margin-top:12px">＋ 登记公共物品</button>
       </div>
 
-      <div class="sec">
+      <div class="sec sec-logs">
         <div class="section-title">🕒 最近动态</div>
         <div class="card card-pad">${recentLogs()}</div>
       </div>
