@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>合租生活管家 · 同一屋檐下，账清事明人亲</title>
-<meta name="description" content="面向合租青年的生活协作工具：费用AA分摊、清洁值日排班、公共物品登记与提醒、室友公约管理。">
+<meta name="description" content="面向合租青年的生活协作工具：费用AA分摊、清洁值日排班、公共物品登记与提醒、室友公约管理。以用户痛点优先的一体化产品设计。">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
 <link rel="stylesheet" href="./css/styles.css">
 </head>
@@ -16,8 +16,10 @@
     <div class="lp-nav-inner">
       <div class="lp-logo"><span class="lp-logo-icon">🏠</span> 合租生活管家</div>
       <nav class="lp-links">
-        <a href="#pain">痛点洞察</a>
-        <a href="#features">功能设计</a>
+        <a href="#pain">痛点</a>
+        <a href="#personas">用户画像</a>
+        <a href="#rivals">竞品分析</a>
+        <a href="#features">功能架构</a>
         <a href="#flows">核心流程</a>
         <a href="#/app" class="lp-btn lp-btn-small">进入 Demo</a>
       </nav>
@@ -27,12 +29,12 @@
   <section class="lp-hero">
     <div class="lp-hero-inner">
       <div class="lp-hero-text">
-        <div class="lp-badge">🛋️ 为合租青年而生的生活协作工具</div>
+        <div class="lp-badge">🛋️ 为合租青年而生的生活协作工具 · 美团 AI Coding 作品</div>
         <h1>同一屋檐下，<br><span class="grad">账清 · 事明 · 人亲</span></h1>
-        <p class="lp-sub">费用 AA 分摊、清洁值日排班、公共物品管理、室友公约签署。<br>把「口头约定」变成「自动提醒」，把「不好意思开口」变成「系统帮你说」。</p>
+        <p class="lp-sub">费用 AA 分摊、清洁值日排班、公共物品管理、室友公约签署，一个应用全搞定。<br>把「口头约定」变成「自动提醒」，把「不好意思开口」变成「系统帮你说」。</p>
         <div class="lp-cta-row">
           <a href="#/app" class="lp-btn lp-btn-primary">🚀 立即体验 Demo</a>
-          <a href="#features" class="lp-btn lp-btn-ghost">查看产品设计 ↓</a>
+          <a href="#pain" class="lp-btn lp-btn-ghost">查看产品设计 ↓</a>
         </div>
         <div class="lp-notes">· 演示数据已内置，可随意增删改 · 数据保存在浏览器本地 · 无需注册</div>
       </div>
@@ -73,86 +75,191 @@
     </div>
     <div class="lp-stats">
       <div><b>4</b><span>大功能模块</span></div>
-      <div><b>3</b><span>种分摊算法</span></div>
-      <div><b>24h</b><span>智能提醒</span></div>
-      <div><b>100%</b><span>数据本地存储</span></div>
+      <div><b>6</b><span>条核心流程闭环</span></div>
+      <div><b>5</b><span>类智能提醒</span></div>
+      <div><b>0</b><span>安装成本 · 数据本地化</span></div>
     </div>
   </section>
 
+  <!-- ============ 1. 痛点洞察 ============ -->
   <section class="lp-section" id="pain">
     <div class="lp-section-head">
-      <h2>合租生活，矛盾从哪来？</h2>
-      <p>来自真实合租社区的痛点调研：90% 的室友矛盾，都源于「账没算清」和「约定没人执行」。</p>
+      <div class="lp-sec-tag">01 · 需求洞察</div>
+      <h2>合租的矛盾，几乎都从「说不清」开始</h2>
+      <p>调研合租社区真实讨论（知乎、澎湃新闻等）：费用、卫生、物品、约定，是合租矛盾的四大源头。它们的共性是——<b>缺记录、缺规则、缺一个「公正的第三方」</b>。</p>
     </div>
+
+    <div class="lp-lifecycle">
+      <div class="lp-life-title">📍 合租全生命周期痛点地图</div>
+      <div class="lp-life-stages">
+        <div class="lp-life-stage"><b>入住第一天</b><span>费用怎么摊？<br>规则谁定？</span></div>
+        <i>→</i>
+        <div class="lp-life-stage"><b>日常相处</b><span>值日没人动<br>东西没人买</span></div>
+        <i>→</i>
+        <div class="lp-life-stage"><b>每月账单日</b><span>垫付忘记<br>催款尴尬</span></div>
+        <i>→</i>
+        <div class="lp-life-stage"><b>矛盾爆发点</b><span>口头约定<br>各说各话</span></div>
+        <i>→</i>
+        <div class="lp-life-stage"><b>有人退租</b><span>押金清算<br>账目纠纷</span></div>
+      </div>
+      <div class="lp-life-note">💡 设计原则：<b>覆盖合租「入住 → 日常 → 结算 → 退租」全生命周期</b>，每个阶段的痛点都有对应功能承接。</div>
+    </div>
+
     <div class="lp-pain-grid">
       <div class="lp-pain-card">
         <div class="lp-pain-icon" style="background:#e6f7f2">💸</div>
         <h3>钱算不清</h3>
-        <p class="lp-quote">「水电燃气按月均摊还是按天算？新人只住了 20 天，凭什么摊一整个月？」</p>
-        <p>垫付忘记记录、结算时各说各话、催款尴尬。欠款不催伤钱，催了伤感情。</p>
-        <span class="lp-solve">→ 三种分摊算法 + 自动结算中心</span>
+        <p class="lp-quote">「新人只住了 20 天，凭什么摊一整个月水电？谁垫的钱还没还，我也不好意思问。」</p>
+        <p>垫付无记录、分摊方式争议、催款伤感情。合租矛盾第一诱因。</p>
+        <span class="lp-solve">→ 三种分摊算法 + 自动结算 + 对账确认 + 一键催收话术</span>
       </div>
       <div class="lp-pain-card">
         <div class="lp-pain-icon" style="background:#fff0e8">🧹</div>
         <h3>活没人干</h3>
-        <p class="lp-quote">「值日表贴在冰箱上，贴了一个月，动的永远是同一个人。」</p>
-        <p>排班不公平、轮值靠自觉、做完没人知道。公共区域卫生成为合租第一大矛盾源。</p>
-        <span class="lp-solve">→ 自动轮值排班 + 打卡提醒 + 积分榜</span>
+        <p class="lp-quote">「值日表贴在冰箱上贴了一个月，动的永远是同一个人，说多了又像指责。」</p>
+        <p>排班靠自觉、轮值不公平、成果看不见，公共区域卫生成为合租第二大矛盾。</p>
+        <span class="lp-solve">→ 自动轮值排班 + 到点提醒 + 打卡积分 + 请假换班</span>
       </div>
       <div class="lp-pain-card">
         <div class="lp-pain-icon" style="background:#e9f1ff">📦</div>
         <h3>东西没人买</h3>
-        <p class="lp-quote">「垃圾袋用完了才发现，纸抽永远只剩最后一张，最后都是同一个人默默下单。」</p>
-        <p>公共物品消耗无记录、补货无提醒，谁买谁吃亏，慢慢变成隐形怨气。</p>
-        <span class="lp-solve">→ 物品登记 + 低库存预警 + 一键补货</span>
+        <p class="lp-quote">「垃圾袋用完了才发现，纸抽永远只剩最后一张，最后总是同一个人默默下单。」</p>
+        <p>公共物品消耗无记录、补货无提醒、费用无人分摊，好心人反成冤大头。</p>
+        <span class="lp-solve">→ 物品登记 + 消耗记录 + 低库存预警 + 补货自动入账 AA</span>
       </div>
       <div class="lp-pain-card">
         <div class="lp-pain-icon" style="background:#f2efff">📜</div>
         <h3>约定没约束</h3>
         <p class="lp-quote">「说好 11 点后安静，转头就忘；当面不好意思说，憋着又难受。」</p>
-        <p>公约口头化、朝令夕改、违约无记录，说理时拿不出任何「证据」。</p>
-        <span class="lp-solve">→ 公约电子化 + 在线投票 + 违约留痕</span>
+        <p>公约口头化、朝令夕改、违约无记录，真吵起来拿不出任何依据。</p>
+        <span class="lp-solve">→ 公约电子化 + 在线投票生效 + 全员签署 + 违约留痕</span>
       </div>
     </div>
   </section>
 
+  <!-- ============ 2. 用户画像 ============ -->
+  <section class="lp-section" id="personas">
+    <div class="lp-section-head">
+      <div class="lp-sec-tag">02 · 用户画像</div>
+      <h2>他们是谁：四类典型合租青年</h2>
+      <p>基于痛点场景反推的典型用户，覆盖「记账焦虑型 / 卫生敏感型 / 忙碌随性型 / 新人融入型」。</p>
+    </div>
+    <div class="lp-persona-grid">
+      <div class="lp-persona" style="--pc:#0EA47A">
+        <div class="lp-persona-head"><span class="lp-persona-ava" style="background:#FFE9E0">🦌</span><div><h3>小鹿 · 25岁 产品运营</h3><em>合租 3 年 · 家里的「账房先生」</em></div></div>
+        <div class="lp-persona-tags"><span>垫付担当</span><span>社恐催款</span><span>怕伤感情</span></div>
+        <p><b>核心痛点：</b>每次垫付都记在备忘录，月底对账像对质；室友忘了还钱，开口像讨债。</p>
+        <p><b>产品价值：</b>「结算中心自动算好谁该转谁，催收话术一键复制，我终于不用当坏人了。」</p>
+      </div>
+      <div class="lp-persona" style="--pc:#FF6A3D">
+        <div class="lp-persona-head"><span class="lp-persona-ava" style="background:#F2EFFF">🐱</span><div><h3>Momo · 27岁 设计师</h3><em>养猫 · 轻微洁癖 · 值日最勤</em></div></div>
+        <div class="lp-persona-tags"><span>洁癖</span><span>值日全勤</span><span>猫奴</span></div>
+        <p><b>核心痛点：</b>公共区域永远只有自己在收拾；想说又怕被说「事儿多」，只能憋着。</p>
+        <p><b>产品价值：</b>「轮值是系统排的，不是我要求的；积分榜让付出看得见，猫砂也能一起管。」</p>
+      </div>
+      <div class="lp-persona" style="--pc:#3B82F6">
+        <div class="lp-persona-head"><span class="lp-persona-ava" style="background:#E9F1FF">🐻</span><div><h3>大熊 · 22岁 应届生</h3><em>刚入住 20 天 · 频繁加班</em></div></div>
+        <div class="lp-persona-tags"><span>新人</span><span>加班多</span><span>怕吃亏</span></div>
+        <p><b>核心痛点：</b>月中入住，水电怎么摊全凭老室友说了算；值日轮到自己常忘记，怕被贴上「懒」的标签。</p>
+        <p><b>产品价值：</b>「按入住天数自动算分摊，谁也不吃亏；到点提醒我值日，做完打卡积分，安全感拉满。」</p>
+      </div>
+      <div class="lp-persona" style="--pc:#7C5CF0">
+        <div class="lp-persona-head"><span class="lp-persona-ava" style="background:#E6F7F2">🐯</span><div><h3>阿凯 · 28岁 健身教练</h3><em>爱做饭 · 作息随意 · 不爱管账</em></div></div>
+        <div class="lp-persona-tags"><span>夜猫子</span><span>爱下厨</span><span>嫌麻烦</span></div>
+        <p><b>核心痛点：</b>记账太麻烦不想碰；做饭多公共调料消耗大；半夜活动多，公约总在耳边被念叨。</p>
+        <p><b>产品价值：</b>「记账 30 秒搞定，补货自动 AA；公约不是我签的『不平等条约』，投票过的我认。」</p>
+      </div>
+    </div>
+    <div class="lp-persona-sync">
+      <b>共性洞察：</b>四类用户共同的底层诉求不是「功能多」，而是——<b>① 公平看得见 ② 提醒不尴尬 ③ 操作不麻烦</b>。这三点成为全部功能设计的最高原则。
+    </div>
+  </section>
+
+  <!-- ============ 3. 竞品分析 ============ -->
+  <section class="lp-section" id="rivals">
+    <div class="lp-section-head">
+      <div class="lp-sec-tag">03 · 竞品分析</div>
+      <h2>市面上已有产品，为什么不够用？</h2>
+      <p>对照国内外 5 款成熟产品：大多是「单点工具」，无法覆盖合租生活的完整场景；缺少面向中国合租场景的「账 + 务 + 物 + 约」一体化方案。</p>
+    </div>
+    <div class="lp-rival-table-wrap">
+      <table class="lp-rival-table">
+        <thead>
+          <tr><th>功能维度</th><th>Splitwise<br><small>美国·费用分摊标杆</small></th><th>OurFlat<br><small>欧洲·合租管理</small></th><th>Tody<br><small>家务清洁管家</small></th><th>支付宝小荷包<br><small>国内·资金共管</small></th><th>圈子账本<br><small>国内·群组记账</small></th><th class="us">本产品<br><small>合租生活管家</small></th></tr>
+        </thead>
+        <tbody>
+          <tr><td>费用分摊</td><td class="yes">✅ 强</td><td class="yes">✅</td><td class="no">—</td><td class="mid">🟡 资金池</td><td class="mid">🟡</td><td class="yes">✅ 三种算法</td></tr>
+          <tr><td>智能结算</td><td class="yes">✅ 最少转账</td><td class="mid">🟡</td><td class="no">—</td><td class="mid">🟡 池内抵扣</td><td class="mid">🟡</td><td class="yes">✅ + 对账确认</td></tr>
+          <tr><td>按天折算（新人/退租）</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="yes">✅ 入住日期驱动</td></tr>
+          <tr><td>值日排班</td><td class="no">—</td><td class="yes">✅ 轮值</td><td class="yes">✅ 周期算法</td><td class="no">—</td><td class="no">—</td><td class="yes">✅ + 积分打卡</td></tr>
+          <tr><td>公共物品管理</td><td class="no">—</td><td class="mid">🟡 购物清单</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="yes">✅ + 库存预警</td></tr>
+          <tr><td>室友公约</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="yes">✅ 投票+签署+违约</td></tr>
+          <tr><td>提醒机制</td><td class="mid">🟡 账单提醒</td><td class="mid">🟡</td><td class="yes">✅</td><td class="mid">🟡</td><td class="mid">🟡</td><td class="yes">✅ 五类聚合</td></tr>
+          <tr><td>押金/退租清算</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="no">—</td><td class="yes">✅ 清算工具</td></tr>
+          <tr><td>中文 / 免注册</td><td class="no">❌</td><td class="no">❌</td><td class="mid">🟡</td><td class="yes">✅</td><td class="yes">✅</td><td class="yes">✅ 本地存储</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="lp-rival-conclusion">
+      <div><b>01</b><p>海外工具语言与场景不合（房租不按天算、无押金文化）；</p></div>
+      <div><b>02</b><p>国内工具只解决「钱」，值日/物品/公约仍靠微信群接龙与口头约定；</p></div>
+      <div><b>03</b><p><b style="color:var(--brand)">我们的机会：合租场景「账 + 务 + 物 + 约」一体化，并用「入住日期」这一底层数据把四个模块真正打通。</b></p></div>
+    </div>
+  </section>
+
+  <!-- ============ 4. 功能架构 ============ -->
   <section class="lp-section" id="features">
     <div class="lp-section-head">
-      <h2>产品功能架构</h2>
-      <p>四个模块围绕「记录 — 计算 — 提醒 — 执行」闭环设计，数据彼此打通：成员入住/退租日期自动驱动费用按天分摊与值日轮值。</p>
+      <div class="lp-sec-tag">04 · 产品结构</div>
+      <h2>信息架构：一个「家」为核心，六大入口</h2>
+      <p>底部导航 5 个一级入口 + 顶部铃铛（提醒中心）+ 头像（成员管理）；每个模块的功能设计都从「痛点 → 动作 → 结果」推导而来。</p>
     </div>
     <div class="lp-arch">
       <div class="lp-arch-root">🏠 合租生活管家</div>
       <div class="lp-arch-grid">
-        <div class="lp-module" style="--mc:#0EA47A">
-          <div class="lp-module-head"><span class="lp-module-icon">💰</span><div><h3>费用 AA 分摊</h3><em>Expense Split</em></div></div>
-          <div class="lp-chips"><span>记一笔</span><span>AA 均摊</span><span>按入住天数</span><span>自定义比例</span><span>自动结算中心</span><span>月度统计</span><span>还款确认</span></div>
-        </div>
         <div class="lp-module" style="--mc:#FF6A3D">
-          <div class="lp-module-head"><span class="lp-module-icon">🧹</span><div><h3>清洁值日排班</h3><em>Chore Roster</em></div></div>
-          <div class="lp-chips"><span>自动轮值</span><span>今日值日</span><span>一键打卡</span><span>本周排班</span><span>积分榜</span><span>完成记录</span></div>
+          <div class="lp-module-head"><span class="lp-module-icon">🏠</span><div><h3>总览</h3><em>Dashboard</em></div></div>
+          <div class="lp-chips"><span>本月支出卡片</span><span>我的待收/待付</span><span>今日值日速览</span><span>库存预警速览</span><span>结算待办</span><span>6月趋势图</span></div>
+        </div>
+        <div class="lp-module" style="--mc:#0EA47A">
+          <div class="lp-module-head"><span class="lp-module-icon">💰</span><div><h3>账单</h3><em>Expense Split</em></div></div>
+          <div class="lp-chips"><span>记一笔（30秒）</span><span>AA均摊/按天/自定义</span><span>月度切换</span><span>对账确认</span><span>结算中心·最少转账</span><span>催收话术复制</span><span>分类占比/趋势</span><span>押金清算</span></div>
+        </div>
+        <div class="lp-module" style="--mc:#2E86AB">
+          <div class="lp-module-head"><span class="lp-module-icon">🧹</span><div><h3>值日</h3><em>Chore Roster</em></div></div>
+          <div class="lp-chips"><span>自动轮值到天</span><span>频率设定(天/周/月)</span><span>今日值日打卡</span><span>请假/换班</span><span>本周排班视图</span><span>连续打卡 Streak</span><span>积分榜</span></div>
         </div>
         <div class="lp-module" style="--mc:#3B82F6">
-          <div class="lp-module-head"><span class="lp-module-icon">📦</span><div><h3>公共物品管理</h3><em>Shared Inventory</em></div></div>
-          <div class="lp-chips"><span>物品登记</span><span>库存状态</span><span>消耗记录</span><span>低库存预警</span><span>一键补货</span><span>位置/归属</span></div>
+          <div class="lp-module-head"><span class="lp-module-icon">📦</span><div><h3>物品</h3><em>Shared Inventory</em></div></div>
+          <div class="lp-chips"><span>物品登记</span><span>位置/归属/阈值</span><span>消耗记录</span><span>库存进度条</span><span>低库存预警</span><span>一键补货</span><span>补货自动入账</span></div>
         </div>
         <div class="lp-module" style="--mc:#7C5CF0">
-          <div class="lp-module-head"><span class="lp-module-icon">📜</span><div><h3>室友公约管理</h3><em>House Covenant</em></div></div>
-          <div class="lp-chips"><span>发起公约</span><span>在线投票</span><span>签署确认</span><span>违约记录</span><span>分类检索</span><span>生效状态</span></div>
+          <div class="lp-module-head"><span class="lp-module-icon">📜</span><div><h3>公约</h3><em>House Covenant</em></div></div>
+          <div class="lp-chips"><span>发起公约</span><span>分类(费/卫/作息/宠)</span><span>在线投票≥60%生效</span><span>签署确认</span><span>违约记录</span><span>状态管理</span></div>
+        </div>
+        <div class="lp-module" style="--mc:#F59E0B">
+          <div class="lp-module-head"><span class="lp-module-icon">🔔</span><div><h3>提醒中心</h3><em>Reminder Hub</em></div></div>
+          <div class="lp-chips"><span>值日待办提醒</span><span>库存补货预警</span><span>待结算提醒</span><span>公约投票提醒</span><span>违约处理提醒</span><span>统一红点聚合</span></div>
+        </div>
+        <div class="lp-module" style="--mc:#EF4444">
+          <div class="lp-module-head"><span class="lp-module-icon">👥</span><div><h3>成员管理</h3><em>Members</em></div></div>
+          <div class="lp-chips"><span>室友档案(入住日期)</span><span>身份切换</span><span>入住/退租登记</span><span>个人分摊明细</span><span>数据导出/导入</span><span>重置演示</span></div>
         </div>
       </div>
       <div class="lp-foundation">
-        <div class="lp-foundation-item">🔗 数据打通：成员入住日期 → 费用按天分摊 / 值日轮值表自动更新</div>
-        <div class="lp-foundation-item">⏰ 提醒中心：值日提醒 · 库存预警 · 待结算提醒 · 公约投票提醒</div>
-        <div class="lp-foundation-item">🔒 隐私安全：数据仅存本地浏览器，支持导出 / 导入备份</div>
+        <div class="lp-foundation-item">🔗 <b>数据打通</b>：入住/退租日期 → 自动驱动「费用按天分摊」「值日轮值名单」更新，一次录入全局生效</div>
+        <div class="lp-foundation-item">⏰ <b>提醒引擎</b>：值日 / 库存 / 结算 / 投票 / 违约，五类提醒统一聚合到提醒中心</div>
+        <div class="lp-foundation-item">🔒 <b>隐私安全</b>：数据仅存本地浏览器，无需注册；支持导出 / 导入备份</div>
       </div>
     </div>
   </section>
 
+  <!-- ============ 5. 核心流程 ============ -->
   <section class="lp-section" id="flows">
     <div class="lp-section-head">
-      <h2>核心流程设计</h2>
-      <p>每个模块都设计为「最短路径闭环」，让用户 30 秒内完成一次完整操作。</p>
+      <div class="lp-sec-tag">05 · 流程设计</div>
+      <h2>六条核心流程，全部 30 秒闭环</h2>
+      <p>每个模块都设计为「最短路径闭环」：输入 → 计算 → 提醒 → 执行 → 归档，用户不需要学习成本。</p>
     </div>
     <div class="lp-flow-grid">
       <div class="lp-flow">
@@ -161,8 +268,9 @@
           <div class="lp-step"><b>1</b><span>垫付人记一笔</span></div><i>→</i>
           <div class="lp-step"><b>2</b><span>选分摊方式</span></div><i>→</i>
           <div class="lp-step"><b>3</b><span>系统自动算账</span></div><i>→</i>
-          <div class="lp-step"><b>4</b><span>结算中心催还款</span></div><i>→</i>
-          <div class="lp-step"><b>5</b><span>还款确认结清</span></div>
+          <div class="lp-step"><b>4</b><span>室友对账确认</span></div><i>→</i>
+          <div class="lp-step"><b>5</b><span>结算中心催还款</span></div><i>→</i>
+          <div class="lp-step"><b>6</b><span>还款确认结清</span></div>
         </div>
       </div>
       <div class="lp-flow">
@@ -171,7 +279,7 @@
           <div class="lp-step"><b>1</b><span>设定任务与频率</span></div><i>→</i>
           <div class="lp-step"><b>2</b><span>系统自动排班</span></div><i>→</i>
           <div class="lp-step"><b>3</b><span>到点提醒值日人</span></div><i>→</i>
-          <div class="lp-step"><b>4</b><span>完成打卡</span></div><i>→</i>
+          <div class="lp-step"><b>4</b><span>完成打卡 / 请假换班</span></div><i>→</i>
           <div class="lp-step"><b>5</b><span>积分入榜</span></div>
         </div>
       </div>
@@ -182,7 +290,7 @@
           <div class="lp-step"><b>2</b><span>日常消耗记录</span></div><i>→</i>
           <div class="lp-step"><b>3</b><span>低于阈值预警</span></div><i>→</i>
           <div class="lp-step"><b>4</b><span>一键补货</span></div><i>→</i>
-          <div class="lp-step"><b>5</b><span>补货费用入账单</span></div>
+          <div class="lp-step"><b>5</b><span>补货费用入账单 AA</span></div>
         </div>
       </div>
       <div class="lp-flow">
@@ -190,32 +298,101 @@
         <div class="lp-flow-steps">
           <div class="lp-step"><b>1</b><span>发起公约草案</span></div><i>→</i>
           <div class="lp-step"><b>2</b><span>室友在线投票</span></div><i>→</i>
-          <div class="lp-step"><b>3</b><span>达到比例生效</span></div><i>→</i>
+          <div class="lp-step"><b>3</b><span>≥60% 同意生效</span></div><i>→</i>
           <div class="lp-step"><b>4</b><span>全员签署确认</span></div><i>→</i>
           <div class="lp-step"><b>5</b><span>违约记录留痕</span></div>
+        </div>
+      </div>
+      <div class="lp-flow">
+        <div class="lp-flow-head"><span>🎒</span><h3>新室友入住闭环</h3></div>
+        <div class="lp-flow-steps">
+          <div class="lp-step"><b>1</b><span>添加成员+入住日期</span></div><i>→</i>
+          <div class="lp-step"><b>2</b><span>费用自动按天折算</span></div><i>→</i>
+          <div class="lp-step"><b>3</b><span>自动加入值日轮值</span></div><i>→</i>
+          <div class="lp-step"><b>4</b><span>接收公约待签署</span></div><i>→</i>
+          <div class="lp-step"><b>5</b><span>无缝融入新家</span></div>
+        </div>
+      </div>
+      <div class="lp-flow">
+        <div class="lp-flow-head"><span>🚪</span><h3>退租清算闭环</h3></div>
+        <div class="lp-flow-steps">
+          <div class="lp-step"><b>1</b><span>登记退租日期</span></div><i>→</i>
+          <div class="lp-step"><b>2</b><span>账目按天截断</span></div><i>→</i>
+          <div class="lp-step"><b>3</b><span>自动退出轮值</span></div><i>→</i>
+          <div class="lp-step"><b>4</b><span>生成结算单</span></div><i>→</i>
+          <div class="lp-step"><b>5</b><span>押金清算确认</span></div>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- ============ 6. 设计规范 ============ -->
   <section class="lp-section lp-highlight">
     <div class="lp-section-head">
-      <h2>设计亮点</h2>
-      <p>区别于记账工具与群接龙，我们做的是「合租关系的操作系统」。</p>
+      <div class="lp-sec-tag">06 · 设计规范</div>
+      <h2>设计原则：公平 · 不尴尬 · 零负担</h2>
+      <p>所有交互与文案都遵循三条原则，确保产品「替人把难听的话说得好听」。</p>
     </div>
     <div class="lp-highlight-grid">
-      <div class="lp-highlight-item"><b>🧮</b><h3>公平的分摊算法</h3><p>均摊 / 按入住天数 / 自定义比例三种方式；新室友、退租自动按天折算，谁都不吃亏。</p></div>
-      <div class="lp-highlight-item"><b>🤝</b><h3>不尴尬的催收</h3><p>结算中心自动计算「谁该转给谁多少钱」，一键复制转账话术，系统替你说出口。</p></div>
-      <div class="lp-highlight-item"><b>🔁</b><h3>全自动轮值</h3><p>任务只需设定一次，系统按成员顺序自动排班到天；完成打卡得积分，公平看得见。</p></div>
-      <div class="lp-highlight-item"><b>🚨</b><h3>库存预警</h3><p>消耗记录驱动库存变化，低于阈值自动进入首页提醒，补货费用可直接计入账单 AA。</p></div>
-      <div class="lp-highlight-item"><b>📝</b><h3>公约即契约</h3><p>投票生效、全员签署、违约留痕，让「口头约定」升级为可追溯的书面契约。</p></div>
-      <div class="lp-highlight-item"><b>🔒</b><h3>隐私与归属</h3><p>数据 100% 本地存储，不注册不上传；支持一键导出备份，随时迁移。</p></div>
+      <div class="lp-highlight-item"><b>🧮</b><h3>公平的算法</h3><p>均摊 / 按入住天数 / 自定义三种分摊；结算中心生成最少笔数转账方案，尾差自动处理，谁都不吃亏。</p></div>
+      <div class="lp-highlight-item"><b>🤝</b><h3>不尴尬的催收</h3><p>催收话术一键复制：「合租账单：8月电费 386.5，你摊 96.63，麻烦转我～」——系统替你说出口。</p></div>
+      <div class="lp-highlight-item"><b>🔁</b><h3>全自动轮值</h3><p>任务设定一次，系统按成员顺序自动排班到天；打卡得积分，请假可换班，公平看得见。</p></div>
+      <div class="lp-highlight-item"><b>🚨</b><h3>库存预警</h3><p>消耗驱动库存，低于阈值自动进提醒中心；补货费用一键记入账单 AA，好心人不吃亏。</p></div>
+      <div class="lp-highlight-item"><b>📝</b><h3>公约即契约</h3><p>投票生效、全员签署、违约留痕，「口头约定」升级为可追溯的书面契约。</p></div>
+      <div class="lp-highlight-item"><b>🔒</b><h3>隐私与归属</h3><p>数据 100% 本地存储，不注册不上传；导出/导入一键备份，换设备不丢数据。</p></div>
+    </div>
+    <div class="lp-design-tokens">
+      <div><b>🎨 色彩</b><p>品牌暖橙 #FF6A3D 传递「家的温度」；四大模块各有识别色，情绪化红点只用于「需要行动」的提醒。</p></div>
+      <div><b>📱 布局</b><p>移动优先（iPhone 安全区适配），桌面居中 480px 容器；底部导航单手可达，FAB 上下文切换动作。</p></div>
+      <div><b>💬 文案</b><p>「帮你说」而非「催你」：所有提醒文案以系统口吻传递，避免成员间直接施压。</p></div>
+    </div>
+  </section>
+
+  <!-- ============ 7. Roadmap ============ -->
+  <section class="lp-section" id="roadmap">
+    <div class="lp-section-head">
+      <div class="lp-sec-tag">07 · 路线图</div>
+      <h2>迭代路线图</h2>
+      <p>当前 V1 聚焦「单机可用的完整闭环」；V2+ 走向多端协同与智能化。</p>
+    </div>
+    <div class="lp-roadmap">
+      <div class="lp-rm-col">
+        <div class="lp-rm-head" style="background:var(--green)">V1 · 已实现</div>
+        <ul>
+          <li>✅ 四大模块完整闭环</li>
+          <li>✅ 三种分摊算法 + 结算中心</li>
+          <li>✅ 值日自动轮值 + 积分榜</li>
+          <li>✅ 库存预警 + 补货入账</li>
+          <li>✅ 公约投票 + 签署 + 违约</li>
+          <li>✅ 提醒中心聚合</li>
+          <li>✅ 本地存储 + 数据备份</li>
+        </ul>
+      </div>
+      <div class="lp-rm-col">
+        <div class="lp-rm-head" style="background:var(--blue)">V2 · 计划中</div>
+        <ul>
+          <li>⬜ 多端实时同步（云端家庭空间）</li>
+          <li>⬜ 微信服务号推送提醒</li>
+          <li>⬜ 水电账单拍照 OCR 导入</li>
+          <li>⬜ 免值日券兑换（积分消耗）</li>
+          <li>⬜ 房东账单与押金托管</li>
+        </ul>
+      </div>
+      <div class="lp-rm-col">
+        <div class="lp-rm-head" style="background:var(--purple)">V3 · 展望</div>
+        <ul>
+          <li>⬜ AI 公约起草助手</li>
+          <li>⬜ 冲突调解建议（话术生成）</li>
+          <li>⬜ 智能预算与支出预警</li>
+          <li>⬜ 转租撮合与信用档案</li>
+        </ul>
+      </div>
     </div>
   </section>
 
   <section class="lp-cta">
     <h2>准备好让合租生活更省心了吗？</h2>
-    <p>打开 Demo，内置 4 位室友、1 个月账单、值日排班与公约数据，随点随玩。</p>
+    <p>打开 Demo，内置 4 位室友、1 个月账单、值日排班、物品库存与公约数据，随点随玩。</p>
     <a href="#/app" class="lp-btn lp-btn-primary lp-btn-large">🚀 进入产品 Demo</a>
     <div class="lp-cta-links"><a href="https://github.com/fudimo123/hezu-life-manager" target="_blank" rel="noopener">查看源码仓库 ↗</a></div>
   </section>
@@ -234,9 +411,14 @@
         <div class="app-home-name" id="app-home-name">🏠 我们的家</div>
         <div class="app-home-sub" id="app-home-sub">—</div>
       </div>
-      <button class="app-avatar-stack" id="btn-members" title="成员管理">
-        <span id="avatar-stack"></span>
-      </button>
+      <div class="app-header-right">
+        <button class="app-bell" id="btn-reminders" title="提醒中心">
+          <span>🔔</span><span class="bell-dot hidden" id="bell-dot"></span>
+        </button>
+        <button class="app-avatar-stack" id="btn-members" title="成员管理">
+          <span id="avatar-stack"></span>
+        </button>
+      </div>
     </header>
 
     <main id="app-main"></main>
@@ -266,6 +448,7 @@
 <script src="./js/views/items.js"></script>
 <script src="./js/views/covenant.js"></script>
 <script src="./js/views/members.js"></script>
+<script src="./js/views/reminders.js"></script>
 <script src="./js/router.js"></script>
 </body>
 </html>
