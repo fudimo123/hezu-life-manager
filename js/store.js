@@ -75,6 +75,9 @@
     s.chores.forEach((c) => { if (!c.leaves) { c.leaves = []; dirty = true; } });
     s.members.forEach((m) => { if (!m.tags) { m.tags = { sleep: '—', clean: '—', pet: '—', smoke: '—', social: '—' }; dirty = true; } });
     if (!s.ai) { s.ai = { provider: 'deepseek', key: '', model: '', baseUrl: '' }; dirty = true; }
+    if (!s.cloud) { s.cloud = { homeId: '', code: '', version: 0, lastSync: 0, joinedAt: 0 }; dirty = true; }
+    if (!s.feedMeta) { s.feedMeta = {}; dirty = true; }
+    if (!s.plaza) { s.plaza = { adopted: {}, uploads: [] }; dirty = true; }
     return dirty ? (saveState(s), s) : s;
   }
   function saveState(s) { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) { /* ignore */ } }
@@ -105,7 +108,13 @@
     return ev.slice(0, limit);
   }
 
-  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { console.warn('save fail', e); } }
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { console.warn('save fail', e); }
+    // 通知云同步引擎（若已加载）
+    if (window.Cloud && window.Cloud.onLocalChange) {
+      try { window.Cloud.onLocalChange(); } catch (e) { /* ignore */ }
+    }
+  }
   function reset() { state = seed(); save(); }
 
   /* ---------- 演示数据 ---------- */
@@ -210,6 +219,9 @@
       settled: {},
       confirms: {},
       ai: { provider: 'deepseek', key: '', model: '', baseUrl: '' },
+      cloud: { homeId: '', code: '', version: 0, lastSync: 0, joinedAt: 0 },
+      feedMeta: {},
+      plaza: { adopted: {}, uploads: [] },
       deposit: {
         amount: 6800, landlord: '王阿姨',
         note: '押一付三 · 押金用于房屋损坏赔偿，退租时结算',
