@@ -64,8 +64,8 @@
   function fTextarea(id, value = '', placeholder = '') {
     return `<textarea class="f-textarea" id="${id}" placeholder="${esc(placeholder)}">${esc(value)}</textarea>`;
   }
-  function fSelect(id, options) {
-    return `<select class="f-select" id="${id}">${options.map((o) => `<option value="${esc(o.value)}">${esc(o.label)}</option>`).join('')}</select>`;
+  function fSelect(id, options, selected) {
+    return `<select class="f-select" id="${id}">${options.map((o) => `<option value="${esc(o.value)}"${o.value === selected ? ' selected' : ''}>${esc(o.label)}</option>`).join('')}</select>`;
   }
   function fSeg(id, options, current) {
     return `<div class="seg-group" id="${id}">${options.map((o) => `<button type="button" class="seg${o.value === current ? ' on' : ''}" data-v="${esc(o.value)}">${esc(o.label)}</button>`).join('')}</div>`;
