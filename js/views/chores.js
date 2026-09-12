@@ -14,18 +14,21 @@
     el.innerHTML = `
     <div class="view-anim">
       <div class="duty-hero">
-        <div class="dh-title">📅 ${st.WEEK_CN[new Date().getDay()]} · ${st.todayStr()}</div>
+        <div class="dh-title">📅 ${st.WEEK_CN[new Date().getDay()]} · ${st.todayStr()} · 🔥 全屋连续值日 <b>${st.houseStreak()}</b> 天</div>
         <div class="dh-name">今日值日 ${tds.length ? '· ' + tds.filter((t) => !t.done).length + ' 项待完成' : '· 无任务'}</div>
         ${tds.length ? tds.map((t) => `
           <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.16);border-radius:12px;padding:10px 12px;margin-bottom:8px">
             <span style="font-size:18px">${t.chore.icon}</span>
             <div style="flex:1;min-width:0">
               <div style="font-size:14px;font-weight:700">${UI.esc(t.chore.title)}</div>
-              <div style="font-size:11.5px;opacity:.85">值日人：${UI.esc(st.memberName(t.memberId))} · +${t.chore.points} 积分</div>
+              <div style="font-size:11.5px;opacity:.85">值日人：${UI.esc(st.memberName(t.memberId))} · +${t.chore.points} 积分${t.memberId === me.id ? '（轮到你啦）' : ''}</div>
             </div>
             ${t.done
               ? `<span style="font-size:12px;font-weight:700;background:rgba(255,255,255,.3);padding:5px 10px;border-radius:8px">已完成 ✓</span>`
-              : `<button class="btn btn-sm" style="background:#fff;color:#2E86AB" data-do="${t.chore.id}">打卡</button>`}
+              : `<div style="display:flex;gap:6px">
+                  <button class="btn btn-sm" style="background:#fff;color:#2E86AB" data-do="${t.chore.id}">${t.memberId === me.id ? '打卡 ✓' : '代打卡'}</button>
+                  ${t.memberId === me.id ? `<button class="btn btn-sm" style="background:rgba(255,255,255,.25);color:#fff" data-leave="${t.chore.id}">请假</button>` : ''}
+                </div>`}
           </div>`).join('')
         : `<div style="background:rgba(255,255,255,.16);border-radius:12px;padding:14px;text-align:center">🎉 今天没有值日任务，好好休息～</div>`}
       </div>
@@ -72,7 +75,12 @@
 
     el.querySelectorAll('[data-do]').forEach((b) => b.addEventListener('click', () => {
       const r = st.doChore(b.dataset.do, st.currentUser().id);
-      if (r) UI.toast(`${st.memberName(r.assignee)} +${r.points} 积分`, '🎉');
+      if (r) UI.toast(`${st.memberName(r.assignee)} +${r.points} 积分${r.assignee !== st.currentUser().id ? '（代打卡）' : ''}`, '🎉');
+      render(el);
+    }));
+    el.querySelectorAll('[data-leave]').forEach((b) => b.addEventListener('click', () => {
+      st.requestLeave(b.dataset.leave, st.currentUser().id);
+      UI.toast('已请假，任务自动顺延给下一位值日人 🙏');
       render(el);
     }));
     const addBtn = el.querySelector('#btn-add-chore');
