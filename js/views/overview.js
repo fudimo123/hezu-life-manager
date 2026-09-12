@@ -47,6 +47,15 @@
         <button class="ov-quick" data-go="addCovenant"><span class="qi">📜</span>发起公约</button>
       </div>
 
+      <div class="ai-banner" id="ai-banner">
+        <span class="ai-banner-ic">🤖</span>
+        <div class="ai-banner-tx">
+          <b>AI 管家</b>
+          <span>帮我写催收话术 · 起草公约 · 建议分摊方式</span>
+        </div>
+        <button class="ai-banner-go">试试 ›</button>
+      </div>
+
       <div class="sec">
         <div class="section-title">🧹 今日值日 <span class="more">🔥 全屋连续 ${st.houseStreak()} 天 · ${tds.length ? tds.filter((t) => !t.done).length + ' 项待完成' : '今天无值日任务'}</span></div>
         ${tds.length ? tds.map((t) => `
@@ -98,6 +107,19 @@
       </div>
 
       <div class="sec">
+        <div class="section-title">🏡 家动态 <span class="more">共同生活的每件小事都值得被记录</span></div>
+        <div class="card card-pad feed-card">
+          ${st.feed(8).map((ev) => `
+            <div class="feed-row">
+              <span class="feed-ic" style="background:${feedColor(ev.type)}">${ev.icon}</span>
+              <div class="feed-tx">${UI.esc(ev.text)}</div>
+              <div class="feed-date">${ev.date.slice(5)}</div>
+            </div>`).join('')}
+          <div class="f-hint" style="margin-top:8px">💡 家动态是「合租社区」的内容沉淀：账清、事明，日子都看得见。</div>
+        </div>
+      </div>
+
+      <div class="sec">
         <div class="section-title">🧾 最近账单 <span class="more" data-go="expenses" style="cursor:pointer">查看全部 →</span></div>
         ${st.state().bills.slice().sort((a, b) => (a.date < b.date ? 1 : -1)).slice(0, 3).map(billRow).join('')}
       </div>
@@ -106,6 +128,8 @@
     // 事件
     const banner = el.querySelector('#rem-banner');
     if (banner) banner.addEventListener('click', () => Views.reminders());
+    const ai = el.querySelector('#ai-banner');
+    if (ai) ai.addEventListener('click', () => Views.ai());
     el.querySelectorAll('[data-go]').forEach((b) => b.addEventListener('click', () => {
       const g = b.dataset.go;
       if (g === 'addBill') Views.expenses.addBill();
@@ -123,6 +147,10 @@
       UI.toast(t.done ? '已标记结清' : '已恢复待结清');
       Router.render();
     }));
+  }
+
+  function feedColor(type) {
+    return type === 'bill' ? '#E6F7F2' : type === 'chore' ? '#E9F1FF' : type === 'stock' ? '#FFF6E5' : '#F2EFFF';
   }
 
   function renderBars() {
