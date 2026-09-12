@@ -74,6 +74,7 @@
     }
     s.chores.forEach((c) => { if (!c.leaves) { c.leaves = []; dirty = true; } });
     s.members.forEach((m) => { if (!m.tags) { m.tags = { sleep: '—', clean: '—', pet: '—', smoke: '—', social: '—' }; dirty = true; } });
+    if (!s.ai) { s.ai = { provider: 'deepseek', key: '', model: '', baseUrl: '' }; dirty = true; }
     return dirty ? (saveState(s), s) : s;
   }
   function saveState(s) { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) { /* ignore */ } }
@@ -208,6 +209,7 @@
       members, bills, chores, items, covenants,
       settled: {},
       confirms: {},
+      ai: { provider: 'deepseek', key: '', model: '', baseUrl: '' },
       deposit: {
         amount: 6800, landlord: '王阿姨',
         note: '押一付三 · 押金用于房屋损坏赔偿，退租时结算',
