@@ -109,7 +109,7 @@
     const myShare = b.split.shares[st.currentUser().id] || 0;
     const cf = st.billConfirm(b);
     return `
-    <div class="bill-row" data-detail="${b.id}" style="cursor:pointer">
+    <div class="bill-row" data-detail="${b.id}" style="cursor:pointer;border-left:4px solid ${t.color}">
       <span class="bill-type-ic" style="background:${t.color}">${t.icon}</span>
       <div class="li-main">
         <div class="li-title">${UI.esc(b.title)}</div>
