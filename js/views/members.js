@@ -43,8 +43,9 @@
       </div>
       <button class="btn btn-outline btn-block" id="m-add">＋ 添加室友</button>
 
-      <div class="section-title" style="margin-top:22px">🗄️ 数据管理</div>
+      <div class="section-title" style="margin-top:22px">🗄️ 数据与设置</div>
       <div style="display:flex;flex-direction:column;gap:8px">
+        <button class="btn btn-soft btn-block" id="m-ai">🤖 AI 管家设置（接入真实大模型）</button>
         <button class="btn btn-soft btn-block" id="m-export">📤 导出数据备份（JSON）</button>
         <button class="btn btn-soft btn-block" id="m-import">📥 导入数据备份</button>
         <button class="btn btn-block" style="background:var(--red-soft);color:var(--red)" id="m-reset">🔄 重置为演示数据</button>
@@ -83,6 +84,7 @@
       });
     }));
     modal.root.querySelector('#m-add').addEventListener('click', () => addMember());
+    modal.root.querySelector('#m-ai').addEventListener('click', () => Views.aiSettings());
     modal.root.querySelector('#m-export').addEventListener('click', () => { st.exportData(); UI.toast('数据已导出'); });
     modal.root.querySelector('#m-import').addEventListener('click', () => modal.root.querySelector('#m-file').click());
     modal.root.querySelector('#m-file').addEventListener('change', (e) => {
