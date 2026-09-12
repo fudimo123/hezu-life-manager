@@ -7,35 +7,58 @@
   function render(el) {
     const st = S();
     const me = st.currentUser();
-    const covs = st.state().covenants.filter((c) => filter === 'all' || c.status === filter || (filter === 'mine' && (c.createdBy === me.id || c.votes[me.id])));
+    const covs = st.state().covenants.filter((c) => filter === 'all' || c.status === filter || c.cat === filter || (filter === 'mine' && (c.createdBy === me.id || c.votes[me.id])));
     const counts = { voting: 0, active: 0 };
     st.state().covenants.forEach((c) => { counts[c.status] = (counts[c.status] || 0) + 1; });
 
     el.innerHTML = `
-    <div class="view-anim">
+    <div class="view-anim cov-view">
       <div class="plaza-banner" id="plaza-banner">
         <span class="pb-ic">🏛️</span>
         <div class="pb-tx"><b>公约广场</b><span>采用社区热门公约 · 分享你家的好公约</span></div>
         <button class="pb-go">进入 ›</button>
       </div>
-      <div class="sec">
+      <div class="sec sec-list">
         <div class="section-title">📜 我们的公约 <span class="more">${st.state().covenants.length} 条</span></div>
-        <div class="chip-row">
+        <div class="chip-row cov-chips">
           <button class="chip ${filter === 'all' ? 'on' : ''}" data-f="all">全部</button>
           <button class="chip ${filter === 'active' ? 'on' : ''}" data-f="active">✅ 生效中 ${counts.active || ''}</button>
           <button class="chip ${filter === 'voting' ? 'on' : ''}" data-f="voting">🗳️ 投票中 ${counts.voting || ''}</button>
           <button class="chip ${filter === 'mine' ? 'on' : ''}" data-f="mine">与我相关</button>
         </div>
+        ${covs.map(covCard).join('')}
+        ${!covs.length ? `<div class="card card-pad empty"><span class="empty-ic">📜</span>该分类下暂无公约</div>` : ''}
+        <button class="btn btn-outline btn-block" id="btn-add-cov" style="margin-top:4px">＋ 发起新公约</button>
       </div>
-      ${covs.map(covCard).join('')}
-      ${!covs.length ? `<div class="card card-pad empty"><span class="empty-ic">📜</span>该分类下暂无公约</div>` : ''}
-      <button class="btn btn-outline btn-block" id="btn-add-cov" style="margin-top:4px">＋ 发起新公约</button>
-      <div class="f-hint" style="padding:12px 4px 0">💡 公约经在线投票（≥60% 同意）后生效；生效后全员签署确认，违约行为将被记录留痕。</div>
+      <div class="cov-side">
+        <div class="cov-stats">
+          <div><b>${counts.active || 0}</b><span>已生效</span></div>
+          <div><b>${counts.voting || 0}</b><span>投票中</span></div>
+          <div><b>${st.state().covenants.reduce((s, c) => s + (c.signatures ? c.signatures.length : 0), 0)}</b><span>签署人次</span></div>
+        </div>
+        <div class="section-title" style="font-size:14px;margin:16px 0 8px">🗂️ 分类筛选</div>
+        <div class="cov-filter-list">
+          <button class="cov-fbtn ${filter === 'all' ? 'on' : ''}" data-f="all">📜 全部公约</button>
+          ${Object.keys(st.COV_CATS).map((k) => `<button class="cov-fbtn ${filter === k ? 'on' : ''}" data-f="${k}">${st.COV_CATS[k].icon} ${st.COV_CATS[k].name}</button>`).join('')}
+          <button class="cov-fbtn ${filter === 'mine' ? 'on' : ''}" data-f="mine">⭐ 与我相关</button>
+        </div>
+        <div class="plaza-mini" id="plaza-mini">
+          <span class="pm-ic">🏛️</span>
+          <div class="pm-tx"><b>公约广场</b><span>7+ 社区高频模板 · 支持分享</span></div>
+          <button class="pm-go">进入 ›</button>
+        </div>
+        <button class="btn btn-purple btn-block" id="btn-add-cov2">＋ 发起新公约</button>
+        <div class="f-hint" style="margin-top:10px">💡 公约经在线投票（≥60% 同意）后生效；生效后全员签署确认，违约行为将被记录留痕。</div>
+      </div>
     </div>`;
 
     el.querySelectorAll('[data-f]').forEach((b) => b.addEventListener('click', () => { filter = b.dataset.f; render(el); }));
     const plaza = el.querySelector('#plaza-banner');
     if (plaza) plaza.addEventListener('click', () => Views.plaza());
+    const plazaMini = el.querySelector('#plaza-mini');
+    if (plazaMini) plazaMini.addEventListener('click', () => Views.plaza());
+    const add2 = el.querySelector('#btn-add-cov2');
+    if (add2) add2.addEventListener('click', () => addCovenant());
     el.querySelectorAll('[data-vote]').forEach((b) => b.addEventListener('click', () => {
       const cov = st.voteCov(b.dataset.vote, me.id, b.dataset.choice);
       if (cov) UI.toast(cov.status === 'active' ? '🎉 公约已生效！' : cov.status === 'rejected' ? '投票结束，公约未通过' : '投票成功');
