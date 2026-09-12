@@ -73,19 +73,49 @@
       dirty = true;
     }
     s.chores.forEach((c) => { if (!c.leaves) { c.leaves = []; dirty = true; } });
+    s.members.forEach((m) => { if (!m.tags) { m.tags = { sleep: '—', clean: '—', pet: '—', smoke: '—', social: '—' }; dirty = true; } });
     return dirty ? (saveState(s), s) : s;
   }
   function saveState(s) { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) { /* ignore */ } }
+  /* ---------- 室友合拍指数（借鉴 Wellcee 找室友标签匹配） ---------- */
+  function compatScore(aId, bId) {
+    const a = member(aId), b = member(bId);
+    if (!a || !b || !a.tags || !b.tags) return null;
+    const dims = Object.keys(TAG_DIMS);
+    let same = 0;
+    dims.forEach((k) => { if (a.tags[k] && b.tags[k] && a.tags[k] === b.tags[k]) same++; });
+    return Math.round((same / dims.length) * 100);
+  }
+
+  /* ---------- 家动态 Feed（社区内容沉淀雏形） ---------- */
+  function feed(limit = 20) {
+    const ev = [];
+    state.bills.forEach((b) => ev.push({ date: b.date, icon: (BILL_TYPES[b.type] || BILL_TYPES.other).icon, text: `${memberName(b.payerId)} 记了一笔「${b.title}」${fmtMoney(b.amount)}`, type: 'bill' }));
+    state.chores.forEach((c) => c.history.forEach((h) => ev.push({ date: h.date, icon: c.icon, text: `${memberName(h.doneBy)} 完成「${c.title}」打卡 +${c.points} 分`, type: 'chore' })));
+    state.items.forEach((it) => {
+      it.restocks.forEach((r) => ev.push({ date: r.date, icon: it.icon, text: `${memberName(r.byId)} 补货「${it.name}」+${r.qty}${it.unit}`, type: 'stock' }));
+      it.consumes.forEach((c) => ev.push({ date: c.date, icon: it.icon, text: `${memberName(c.byId)} 消耗「${it.name}」×${c.qty}${it.unit}`, type: 'stock' }));
+    });
+    state.covenants.forEach((cv) => {
+      ev.push({ date: cv.date, icon: '📜', text: `${memberName(cv.createdBy)} 发起公约《${cv.title}》${cv.status === 'voting' ? '，投票中' : cv.status === 'active' ? '，已生效' : '，未通过'}`, type: 'covenant' });
+      cv.violations.forEach((v) => ev.push({ date: v.date, icon: '🚫', text: `${memberName(v.memberId)} 在《${cv.title}》有一条违约记录`, type: 'covenant' }));
+    });
+    ev.sort((a, b) => (a.date < b.date ? 1 : -1));
+    return ev.slice(0, limit);
+  }
+
   function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { console.warn('save fail', e); } }
   function reset() { state = seed(); save(); }
 
   /* ---------- 演示数据 ---------- */
+  // 生活习惯维度（用于室友画像与合拍指数，借鉴 Wellcee 找室友标签体系）
+  const TAG_DIMS = { sleep: '作息', clean: '卫生', pet: '宠物', smoke: '烟酒', social: '社交' };
   function seed() {
     const members = [
-      { id: 'm1', name: '小鹿', emoji: '🦌', color: '#FF8A65', joined: daysAgo(200), left: null, points: 86 },
-      { id: 'm2', name: '阿凯', emoji: '🐯', color: '#4DB6AC', joined: daysAgo(180), left: null, points: 64 },
-      { id: 'm3', name: 'Momo', emoji: '🐱', color: '#9575CD', joined: daysAgo(150), left: null, points: 102 },
-      { id: 'm4', name: '大熊', emoji: '🐻', color: '#64B5F6', joined: daysAgo(20), left: null, points: 18 },
+      { id: 'm1', name: '小鹿', emoji: '🦌', color: '#FF8A65', joined: daysAgo(200), left: null, points: 86, tags: { sleep: '早睡早起', clean: '爱整洁', pet: '无', smoke: '不烟不酒', social: '偏i人' } },
+      { id: 'm2', name: '阿凯', emoji: '🐯', color: '#4DB6AC', joined: daysAgo(180), left: null, points: 64, tags: { sleep: '晚睡', clean: '随性', pet: '无', smoke: '偶尔小酌', social: '偏e人' } },
+      { id: 'm3', name: 'Momo', emoji: '🐱', color: '#9575CD', joined: daysAgo(150), left: null, points: 102, tags: { sleep: '晚睡', clean: '爱整洁', pet: '有猫', smoke: '不烟不酒', social: '偏i人' } },
+      { id: 'm4', name: '大熊', emoji: '🐻', color: '#64B5F6', joined: daysAgo(20), left: null, points: 18, tags: { sleep: '熬夜党', clean: '随性', pet: '无', smoke: '不烟不酒', social: '偏e人' } },
     ];
 
     const bills = [
@@ -527,5 +557,6 @@
     itemStatus, lowItems, consumeItem, restockItem,
     covProgress, voteCov, signCov, addViolation,
     allReminders, exportData, importData, uid, round2,
+    TAG_DIMS, compatScore, feed,
   };
 })();
